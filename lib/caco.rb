@@ -1,5 +1,6 @@
 require 'delegate'
 require 'augeas'
+require 'config'
 require 'cells-erb'
 require 'digest'
 require 'json'
@@ -9,6 +10,7 @@ require 'trailblazer'
 require 'trailblazer/cells'
 
 # system
+require "caco/config"
 require "caco/executer"
 require "caco/facter"
 require "caco/file_writer"
@@ -22,6 +24,10 @@ require "caco/postgres"
 require "caco/rbenv"
 
 module Caco
+  class << self
+    attr_accessor :root
+  end
+
   class Error < StandardError; end
   # Your code goes here...
 end

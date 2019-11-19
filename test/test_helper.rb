@@ -1,5 +1,8 @@
+APP_PATH = File.expand_path('../', __dir__)
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 require "caco"
+Caco.root = Pathname.new(APP_PATH)
+
 require 'pry'
 
 require 'minitest/autorun'
@@ -7,9 +10,7 @@ require 'minitest/reporters'
 require 'trailblazer/developer'
 require 'fakefs/safe'
 
-ROOT_PATH = File.expand_path("../../", __FILE__)
-TMP_PATH = File.join(ROOT_PATH, "tmp")
-
+TMP_PATH = Caco.root.join("tmp").to_s
 Dir.mkdir TMP_PATH unless File.exist? TMP_PATH
 
 Dir[File.expand_path("../support/**/*.rb", __FILE__)].each { |f| require f }

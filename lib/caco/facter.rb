@@ -31,7 +31,7 @@ module Caco::Facter
       end
 
       def external_facter_data
-        success, exit_code, output = Caco::Executer.proccess(command: "facter -j")
+        success, exit_code, output = Caco::Executer.(command: "facter -j")
         output
       end
   end

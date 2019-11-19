@@ -4,7 +4,9 @@ PATH
     caco (0.1.0)
       cells (~> 4.1)
       cells-erb (~> 0.1)
+      config
       dry-validation (~> 1.3)
+      hiera-eyaml
       ruby-augeas
       trailblazer (~> 2.1)
       trailblazer-cells
@@ -12,6 +14,12 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    activesupport (6.0.1)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      i18n (>= 0.7, < 2)
+      minitest (~> 5.1)
+      tzinfo (~> 1.1)
+      zeitwerk (~> 2.2)
     ansi (1.5.0)
     builder (3.2.3)
     cells (4.1.7)
@@ -24,10 +32,15 @@ GEM
       erbse (>= 0.1.1)
     coderay (1.1.2)
     concurrent-ruby (1.1.5)
+    config (2.0.0)
+      activesupport (>= 4.2)
+      deep_merge (~> 1.2, >= 1.2.1)
+      dry-schema (~> 1.0)
     declarative (0.0.10)
     declarative-builder (0.1.0)
       declarative-option (< 0.2.0)
     declarative-option (0.1.0)
+    deep_merge (1.2.1)
     disposable (0.4.6)
       declarative (>= 0.0.9, < 1.0.0)
       declarative-builder (< 0.2.0)
@@ -89,6 +102,12 @@ GEM
     guard-minitest (2.4.6)
       guard-compat (~> 1.2)
       minitest (>= 3.0)
+    hiera-eyaml (3.1.1)
+      highline (~> 1.6.19)
+      optimist
+    highline (1.6.21)
+    i18n (1.7.0)
+      concurrent-ruby (~> 1.0)
     listen (3.2.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -104,6 +123,7 @@ GEM
     notiffany (0.1.3)
       nenv (~> 0.1)
       shellany (~> 0.0)
+    optimist (3.0.0)
     pry (0.12.2)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
@@ -123,6 +143,7 @@ GEM
     shellany (0.0.1)
     temple (0.8.2)
     thor (0.20.3)
+    thread_safe (0.3.6)
     tilt (2.0.10)
     trailblazer (2.1.0)
       trailblazer-macro (>= 2.1.0, < 2.2.0)
@@ -147,7 +168,10 @@ GEM
       trailblazer-activity (>= 0.10.0, < 1.0.0)
       trailblazer-activity-dsl-linear (>= 0.2.1, < 1.0.0)
       trailblazer-developer (>= 0.0.8)
+    tzinfo (1.2.5)
+      thread_safe (~> 0.1)
     uber (0.1.0)
+    zeitwerk (2.2.1)
 
 PLATFORMS
   ruby
