@@ -8,6 +8,10 @@ require 'trailblazer/developer'
 require 'fakefs/safe'
 
 ROOT_PATH = File.expand_path("../../", __FILE__)
+TMP_PATH = File.join(ROOT_PATH, "tmp")
+
+Dir.mkdir TMP_PATH unless File.exist? TMP_PATH
+
 Dir[File.expand_path("../support/**/*.rb", __FILE__)].each { |f| require f }
 
 reporter_options = { color: true, slow_count: 5 }

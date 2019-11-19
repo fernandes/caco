@@ -1,13 +1,12 @@
 module Caco::Postgres::ConfHelper
   def setup
-    @tmp_path = File.join(ROOT_PATH, "tmp")
-    File.open("#{@tmp_path}/postgresql.conf", File::RDWR|File::CREAT, 0644) do |f|
+    File.open("#{TMP_PATH}/postgresql.conf", File::RDWR|File::CREAT, 0644) do |f|
       f.write(postgresql_content)
     end
   end
 
   def teardown
-    File.unlink("#{@tmp_path}/postgresql.conf") if File.exist?("#{@tmp_path}/postgresql.conf")
+    File.unlink("#{TMP_PATH}/postgresql.conf") if File.exist?("#{TMP_PATH}/postgresql.conf")
   end
 
   def postgresql_content
