@@ -1,11 +1,9 @@
+require 'delegate'
 require 'augeas'
 require 'cells-erb'
 require 'digest'
 require 'json'
 require 'open3'
-
-# Call `SimpleDelegator` to avoid bug on travis
-SimpleDelegator
 
 require 'trailblazer'
 require 'trailblazer/cells'
