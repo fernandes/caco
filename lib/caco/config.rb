@@ -10,6 +10,7 @@ module Caco
 
   class Configuration
     attr_accessor :root
+    attr_accessor :eyaml_parser
 
     def initialize
       @root = 'donotreply@example.com'

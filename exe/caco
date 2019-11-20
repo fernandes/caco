@@ -1,61 +1,12 @@
 #!/usr/bin/env ruby
-ENV['CACO_ENV'] ||= 'development'
-APP_PATH = File.expand_path('../', __dir__)
-require 'hiera/backend/eyaml'
-require 'hiera/backend/eyaml/options'
-require 'hiera/backend/eyaml/parser/parser'
 
 require "caco"
+
+ENV['CACO_ENV'] ||= 'development'
+APP_PATH = File.expand_path('../', __dir__)
 Caco.root = Pathname.new(APP_PATH)
 
-Config.setup do |config|
-  config.const_name = 'Settings'
-  config.use_env = true
-end
-
-Hiera::Backend::Eyaml::Options[:pkcs7_public_key] = Caco.root.join("keys", "public_key.pkcs7.pem")
-Hiera::Backend::Eyaml::Options[:pkcs7_private_key] = Caco.root.join("keys", "private_key.pkcs7.pem")
-parser = Hiera::Backend::Eyaml::Parser::ParserFactory.encrypted_parser
-content="foo"
-# NoMethodError: undefined method `plain_text' for #<Hiera::Backend::Eyaml::Parser::NonMatchToken:0x00007fe9ce983068>
-content = Settings.password
-parser.parse(content).first.plain_text
-# > secret
-content = File.read(Caco.root.join("data", "common.yaml"))
-parser.parse(content)
-# Monkey patch Config::Sources::YAMLSource#load
-# call super to get content, process with Eyaml and return replaced
-# parsed = parser.parse(content)[1]
-# content.sub!(parsed.match, parsed.plain_text)
-# needs to iterate over all methods
-
-facter_kernel =  Caco::Facter.("kernel")
-facter_os_name = Caco::Facter.("os", "name")
-facter_distro_codename = (facter_kernel == "Linux" ? Caco::Facter.("os", "distro", "codename") : nil)
-facter_release_full = Caco::Facter.("os", "release", "full")
-facter_release_major = Caco::Facter.("os", "release", "major")
-facter_release_minor = Caco::Facter.("os", "release", "minor")
-facter_fqdn = Caco::Facter.("networking", "fqdn")
-
-# From more generic to specific
-Config.load_and_set_settings(
-  Caco.root.join("data", "common.yaml"),
-  Caco.root.join("data", "os", "#{facter_os_name}.yaml"),
-  Caco.root.join("data", "os", "#{facter_os_name}", "#{facter_distro_codename}.yaml"),
-  # maybe add some organizations here?
-  # maybe add some roles here?
-  Caco.root.join("data", "nodes", "#{facter_fqdn}"),
-)
-
-puts Settings.value
-puts Settings.foo
-puts Settings.password
-
-require 'pry'; binding.pry
-
-- "nodes/%{trusted.certname}.yaml"
-- "roles/%{facts.role}.yaml"
-- "organizations/%{facts.organization}.yaml"
-- "os/%{facts.os.family}/%{facts.os.lsbdistcodename}.yaml"
-- "os/%{facts.os.family}.yaml"
-- "common.yaml"
+Caco::SettingsLoader.(params: {
+  keys_path: Caco.root.join("test", "fixtures", "keys"),
+  data_path: Caco.root.join("test", "fixtures", "data")
+})

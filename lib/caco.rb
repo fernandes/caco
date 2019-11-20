@@ -1,21 +1,27 @@
+# Ruby Dependencies
 require 'delegate'
-require 'augeas'
-require 'config'
-require 'cells-erb'
 require 'digest'
 require 'json'
 require 'open3'
 
+# Gems
+require 'augeas'
+require 'cells-erb'
+require 'config'
+require 'hiera/backend/eyaml'
+require 'hiera/backend/eyaml/options'
+require 'hiera/backend/eyaml/parser/parser'
 require 'trailblazer'
 require 'trailblazer/cells'
 
-# system
+# System
 require "caco/config"
 require "caco/executer"
 require "caco/facter"
 require "caco/file_writer"
 require "caco/finder"
 require "caco/macro"
+require "caco/settings_loader"
 require "caco/version"
 
 # modules
