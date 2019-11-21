@@ -9,6 +9,9 @@ class Caco::Unpacker < Trailblazer::Operation
     input: :tar_integrity_test_input,
     output: :tar_integrity_test_output,
     id: "tar_integrity_test",
+    Output(:failure) => Track(:success)
+
+  step :check_integrity_test,
     Output(:failure) => Track(:unknown_command),
     Output(:success) => Id(:build_tar_command)
 
@@ -41,6 +44,11 @@ class Caco::Unpacker < Trailblazer::Operation
     ctx[:integrity_command] = "tar tf #{pack}"
   end
 
+  def check_integrity_test(ctx, command_exit_code:, number_of_files:, **)
+    return true if command_exit_code == 0 && number_of_files > 0
+    false
+  end
+
   def find_format(ctx, pack:, dest:, **)
     ctx[:unknown_file_mime] = Marcel::MimeType.for pack
   rescue StandardError
@@ -59,11 +67,12 @@ class Caco::Unpacker < Trailblazer::Operation
   end
 
   def tar_integrity_test_input(original_ctx, integrity_command:, **)
-    { params: { command: integrity_command } }
+    { params: { command: "#{integrity_command} 2> /dev/null|wc -l" } }
   end
 
   def tar_integrity_test_output(scoped_ctx, exit_code:, output:, **)
-    { command_exit_code: exit_code, command_output: output }
+    number_of_files = Integer(output)
+    { command_exit_code: exit_code, command_output: output, number_of_files: number_of_files }
   end
 
   def unpacker_command_input(original_ctx, command:, **)
