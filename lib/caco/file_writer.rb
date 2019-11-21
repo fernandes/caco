@@ -2,7 +2,7 @@ class Caco::FileWriter < Trailblazer::Operation
   step Caco::Macro::ValidateParamPresence(:path)
   step Caco::Macro::ValidateParamPresence(:content)
   step Caco::Macro::NormalizeParams()
-  step :file_exist
+  pass :file_exist
   step :calculate_md5
   step :compare_md5, Output(Trailblazer::Activity::Left, :failure) => End(:success)
   step :mkdir_p
@@ -10,13 +10,11 @@ class Caco::FileWriter < Trailblazer::Operation
 
   def file_exist(ctx, path:, **)
     ctx[:file_exist] = File.exist?(path)
-    true
   end
 
   def calculate_md5(ctx, path:, file_exist:, content:, **)
     ctx[:current_md5] = (file_exist ? Digest::MD5.hexdigest(File.read(path)) : "")
     ctx[:content_md5] = Digest::MD5.hexdigest(content)
-    true
   end
 
   def compare_md5(ctx, content_md5:, current_md5:, **)
