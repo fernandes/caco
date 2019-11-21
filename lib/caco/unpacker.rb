@@ -3,6 +3,8 @@ class Caco::Unpacker < Trailblazer::Operation
   step Caco::Macro::ValidateParamPresence(:dest)
   step Caco::Macro::NormalizeParams()
   pass :create_dest
+  step :calculate_mime_type
+  step :build_integrity_command
   step Subprocess(Caco::Executer),
     input: :tar_integrity_test_input,
     output: :tar_integrity_test_output,
@@ -24,8 +26,19 @@ class Caco::Unpacker < Trailblazer::Operation
     id: "unpacker_command"
   fail :command_failed
 
+  def calculate_mime_type(ctx, pack:, **)
+    ctx[:mime_type] = Marcel::MimeType.for pack
+  end
+
   def create_dest(ctx, dest:, **)
     FileUtils.mkdir_p(dest)
+  end
+
+  def build_integrity_command(ctx, pack:, mime_type:, **)
+    return (ctx[:integrity_command] = "tar tzf #{pack}") if mime_type == "application/gzip"
+    return (ctx[:integrity_command] = "tar tjf #{pack}") if mime_type == "application/x-bzip"
+    return (ctx[:integrity_command] = "tar tf #{pack}") if mime_type == "application/x-tar"
+    ctx[:integrity_command] = "tar tf #{pack}"
   end
 
   def find_format(ctx, pack:, dest:, **)
@@ -34,9 +47,9 @@ class Caco::Unpacker < Trailblazer::Operation
     false
   end
 
-  def build_unknown_command(ctx, pack:, dest:, unknown_file_mime:, **)
+  def build_unknown_command(ctx, pack:, dest:, mime_type:, **)
     basename = File.basename(pack)
-    return ctx[:command] = "gunzip -c #{pack} > #{dest}/#{basename}" if unknown_file_mime == "application/gzip"
+    return ctx[:command] = "gunzip -c #{pack} > #{dest}/#{basename}" if mime_type == "application/gzip"
     ctx[:failure_reason] = "unknown_format"
     false
   end
@@ -45,8 +58,8 @@ class Caco::Unpacker < Trailblazer::Operation
     ctx[:command] = "tar xpf #{pack} -C #{dest}"
   end
 
-  def tar_integrity_test_input(original_ctx, pack:, **)
-    { params: { command: "tar tzf #{pack} > /dev/null" } }
+  def tar_integrity_test_input(original_ctx, integrity_command:, **)
+    { params: { command: integrity_command } }
   end
 
   def tar_integrity_test_output(scoped_ctx, exit_code:, output:, **)
@@ -61,7 +74,7 @@ class Caco::Unpacker < Trailblazer::Operation
     { command_exit_code: exit_code, command_output: output }
   end
 
-  def command_failed(ctx, command_exit_code:, failure_reason:, **)
+  def command_failed(ctx, failure_reason:, **)
     # puts "Command Failed with output: #{failure_reason}"
     # log to somewhere
     false
