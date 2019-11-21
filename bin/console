@@ -8,8 +8,8 @@ APP_PATH = File.expand_path('../', __dir__)
 Caco.root = Pathname.new(APP_PATH)
 
 Caco::SettingsLoader.(params: {
-  keys_path: Caco.root.join("test", "fixtures", "keys"),
-  data_path: Caco.root.join("test", "fixtures", "data")
+  keys_path: Caco.root.join("keys"),
+  data_path: Caco.root.join("data")
 })
 
 # You can add fixtures and/or initialization code here to make experimenting

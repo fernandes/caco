@@ -38,7 +38,7 @@ module Caco
       ctx[:facts] = {}
       ctx[:facts][:facter_kernel] =  Caco::Facter.("kernel")
       ctx[:facts][:facter_os_name] = Caco::Facter.("os", "name")
-      ctx[:facts][:facter_distro_codename] = (ctx[:facter_kernel] == "Linux" ? Caco::Facter.("os", "distro", "codename") : nil)
+      ctx[:facts][:facter_distro_codename] = (ctx[:facts][:facter_kernel] == "Linux" ? Caco::Facter.("os", "distro", "codename") : nil)
       ctx[:facts][:facter_release_full] = Caco::Facter.("os", "release", "full")
       ctx[:facts][:facter_release_major] = Caco::Facter.("os", "release", "major")
       ctx[:facts][:facter_release_minor] = Caco::Facter.("os", "release", "minor")

@@ -15,18 +15,20 @@ Down.backend Down::Http
 require 'hiera/backend/eyaml'
 require 'hiera/backend/eyaml/options'
 require 'hiera/backend/eyaml/parser/parser'
+require 'marcel'
 require 'trailblazer'
 require 'trailblazer/cells'
 
-# System
-require "caco/macro"
-
+# System (order dependant)
 require "caco/config"
-require "caco/downloader"
+require "caco/macro"
 require "caco/executer"
+
 require "caco/facter"
 require "caco/file_writer"
+require "caco/downloader"
 require "caco/finder"
+require "caco/unpacker"
 require "caco/settings_loader"
 require "caco/version"
 
