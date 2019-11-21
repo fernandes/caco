@@ -9,11 +9,11 @@ module Caco::Macro
     # new API
     {
       task: task,
-      id:   name
+      id:   "validate_params.presence.#{name}"
     }
   end
 
-  def self.NormalizeParams(name: :myparams, merge_hash: {})
+  def self.NormalizeParams(merge_hash: {})
     task = ->((ctx, flow_options), _) do
       ctx[:params].each_pair do |k, v|
         ctx[k] = v
@@ -25,7 +25,7 @@ module Caco::Macro
     # new API
     {
       task: task,
-      id:   name
+      id:   "normalize_params"
     }
   end
 end

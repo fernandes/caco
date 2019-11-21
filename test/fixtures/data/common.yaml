@@ -1,3 +1,7 @@
 foo: bar
 value: common
 password: ENC[PKCS7,MIIBeQYJKoZIhvcNAQcDoIIBajCCAWYCAQAxggEhMIIBHQIBADAFMAACAQEwDQYJKoZIhvcNAQEBBQAEggEAIa/12y6RtvRrgzBG3+qCW9IT84VOTJgPzwfbx9GYteIrHwrAsCgri0DDVncDqWUgmJGq/CopnlrxcDqtjldz0iF7fHd8n61jyR+3aMy/PVI7EJK3IFkaXw/Kaajm80zxWyLIWCpXl13uZOE4I5hAfYqHc5pv/BbHdc2oJTDrWWfZXmFTAgJ7fyo0WyL6VUgB+c8ScU3lGCLIixr6tVd6AlpqobIkz9bjPzRzTtrhJNvgckWAr09rsPYUcHddfURj6r9by8I7+jr9wmR/JpHJdKqorG+7pL93IjzDB2fOigM7vO4xXhKbhR5LK0u47SNsqxCDUttSreE6Zs5+vDA9szA8BgkqhkiG9w0BBwEwHQYJYIZIAWUDBAEqBBAJddbVse7+PTI5XdpxyB6fgBAI98IJnMvL0K+KI9a/Ivdh]
+
+debian:
+  apt_default_repo:
+    mirror_url: http://ftp.br.debian.org/debian

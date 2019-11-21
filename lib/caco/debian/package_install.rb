@@ -1,25 +1,35 @@
 module Caco::Debian
   class PackageInstall < Trailblazer::Operation
     class PackageNameError < StandardError; end
+    step Caco::Macro::ValidateParamPresence(:package)
+    step Caco::Macro::NormalizeParams()
 
-    step :check_package_name
-    step :check_needs_install, Output(Trailblazer::Activity::Left, :failure) => End(:success)
-    step :package_install
+    step Subprocess(Caco::Debian::PackageInstalled),
+      id: "package_installed?",
+      input: :package_installed_input,
+      output: []
+    fail Subprocess(Caco::Executer),
+      input: :package_install_input,
+      output: :package_install_output,
+      id: "package_install",
+      Output(:success) => End(:success)
+    step :package_already_installed!
 
-    def check_package_name(ctx, params:, **)
-      raise PackageNameError.new("Provide a package name") if params[:package].empty?
-      true
+    def package_already_installed!(ctx, params:, **)
+      ctx[:already_installed] = true
     end
 
-    def check_needs_install(ctx, params:, **)
-      ctx[:package_needs_install] = !Caco::Debian::PackageInstalled.(package: params[:package])
-    end
+    private
+      def package_installed_input(original_ctx, package:, **)
+        { params: { package: package } }
+      end
 
-    def package_install(ctx, params:, **)
-      package = params[:package]
-
-      success, exit_code, output = Caco::Executer.(command: "apt-get install -y #{package}")
-      ctx[:package_installed] = success
-    end
+      def package_install_input(original_ctx, package:, **)
+        { params: { command: "apt-get install -y #{package}" } }
+      end
+    
+      def package_install_output(scoped_ctx, exit_code:, output:, **)
+        { package_install_exit_code: exit_code, package_install_output: output }
+      end
   end
 end

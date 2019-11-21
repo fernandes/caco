@@ -1,87 +1,51 @@
 require "test_helper"
 
 class Caco::Debian::PackageInstalledTest < Minitest::Test
-  def test_dpkg_installed_success_fooo
-    described_class.stub :dpkg_installed?, true do
-      described_class.stub :dpkg_query_installed?, true do
-        assert described_class.(package: "package")
-      end
-    end
+  def test_dpkg_and_query_installed
+    returns = [
+      [[true, 0, ""], ['dpkg -s package']],
+      [[true, 0, stub_output_installed_package], ["dpkg-query -W -f='${Status} ${Version}\n' package"]]
+    ]
 
-    described_class.stub :dpkg_installed?, true do
-      described_class.stub :dpkg_query_installed?, false do
-        refute described_class.(package: "package")
-      end
-    end
-
-    described_class.stub :dpkg_installed?, false do
-      described_class.stub :dpkg_query_installed?, true do
-        refute described_class.(package: "package")
-      end
-    end
-
-    described_class.stub :dpkg_installed?, false do
-      described_class.stub :dpkg_query_installed?, false do
-        refute described_class.(package: "package")
-      end
+    executer_stub(returns) do
+      result = described_class.(params: { package: "package" })
+      assert result.success?
     end
   end
 
-  # dpkg_installed?
-  def test_dpkg_installed_success
-    @commander = Minitest::Mock.new
-    @commander.expect :call, [true, 0, ""], ['dpkg -s package']
+  def test_dpkg_not_installed
+    returns = [
+      [[false, 1, ""], ['dpkg -s package']],
+    ]
 
-    Caco::Executer.stub :execute, ->(command){ @commander.call(command) } do
-      assert described_class.dpkg_installed?(package: "package")
+    executer_stub(returns) do
+      result = described_class.(params: { package: "package" })
+      assert result.failure?
     end
-
-    @commander.verify
   end
 
-  def test_dpkg_installed_failure
-    @commander = Minitest::Mock.new
-    @commander.expect :call, [false, 1, ""], ['dpkg -s package']
+  def test_dpkg_query_deinstalled_package
+    returns = [
+      [[true, 0, ""], ['dpkg -s package']],
+      [[true, 0, stub_output_deinstalled_package], ["dpkg-query -W -f='${Status} ${Version}\n' package"]]
+    ]
 
-    Caco::Executer.stub :execute, ->(command){ @commander.call(command) } do
-      refute described_class.dpkg_installed?(package: "package")
+    executer_stub(returns) do
+      result = described_class.(params: { package: "package" })
+      assert result.failure?
     end
-
-    @commander.verify
   end
 
-  # dpkg_query_installed?
-  def test_dpkg_query_installed_success
-    @commander = Minitest::Mock.new
-    @commander.expect :call, [true, 0, stub_output_installed_package], ["dpkg-query -W -f='${Status} ${Version}\n' package"]
+  def test_dpkg_query_never_installed_package
+    returns = [
+      [[true, 0, ""], ['dpkg -s package']],
+      [[true, 0, stub_output_never_installed_package], ["dpkg-query -W -f='${Status} ${Version}\n' package"]]
+    ]
 
-    Caco::Executer.stub :execute, ->(command){ @commander.call(command) } do
-      assert described_class.dpkg_query_installed?(package: "package")
+    executer_stub(returns) do
+      result = described_class.(params: { package: "package" })
+      assert result.failure?
     end
-
-    @commander.verify
-  end
-
-  def test_dpkg_query_installed_failure_on_deinstall
-    @commander = Minitest::Mock.new
-    @commander.expect :call, [true, 0, stub_output_deinstalled_package], ["dpkg-query -W -f='${Status} ${Version}\n' package"]
-
-    Caco::Executer.stub :execute, ->(command){ @commander.call(command) } do
-      refute described_class.dpkg_query_installed?(package: "package")
-    end
-
-    @commander.verify
-  end
-
-  def test_dpkg_query_installed_failure_on_never_installed
-    @commander = Minitest::Mock.new
-    @commander.expect :call, [true, 0, stub_output_never_installed_package], ["dpkg-query -W -f='${Status} ${Version}\n' package"]
-
-    Caco::Executer.stub :execute, ->(command){ @commander.call(command) } do
-      refute described_class.dpkg_query_installed?(package: "package")
-    end
-
-    @commander.verify
   end
 
   def stub_output_deinstalled_package

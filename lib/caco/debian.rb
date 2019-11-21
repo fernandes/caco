@@ -1,7 +1,11 @@
 require 'caco/debian/apt_repo_add'
+require 'caco/debian/apt_sources_list'
 require 'caco/debian/apt_update'
-require 'caco/debian/package_install'
 require 'caco/debian/package_installed'
+require 'caco/debian/package_install'
+
+# Templates
+require 'caco/debian/cell/sources_list'
 
 module Caco
   module Debian

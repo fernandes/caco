@@ -15,7 +15,7 @@ module Caco
       ctx[:data_path] = (params.key?(:data_path) ? Pathname.new(params[:data_path]) : Pathname.new(Caco.root.join("data")))
     end
 
-    def config_setup(ctx, params:, **)
+    def config_setup(ctx, **)
       Config.setup do |config|
         config.const_name = 'Settings'
         config.use_env = true
@@ -34,25 +34,26 @@ module Caco
       end
     end
 
-    def facter_needed_values(ctx, params:, **)
-      ctx[:facter_kernel] =  Caco::Facter.("kernel")
-      ctx[:facter_os_name] = Caco::Facter.("os", "name")
-      ctx[:facter_distro_codename] = (ctx[:facter_kernel] == "Linux" ? Caco::Facter.("os", "distro", "codename") : nil)
-      ctx[:facter_release_full] = Caco::Facter.("os", "release", "full")
-      ctx[:facter_release_major] = Caco::Facter.("os", "release", "major")
-      ctx[:facter_release_minor] = Caco::Facter.("os", "release", "minor")
-      ctx[:facter_fqdn] = Caco::Facter.("networking", "fqdn")
+    def facter_needed_values(ctx, **)
+      ctx[:facts] = {}
+      ctx[:facts][:facter_kernel] =  Caco::Facter.("kernel")
+      ctx[:facts][:facter_os_name] = Caco::Facter.("os", "name")
+      ctx[:facts][:facter_distro_codename] = (ctx[:facter_kernel] == "Linux" ? Caco::Facter.("os", "distro", "codename") : nil)
+      ctx[:facts][:facter_release_full] = Caco::Facter.("os", "release", "full")
+      ctx[:facts][:facter_release_major] = Caco::Facter.("os", "release", "major")
+      ctx[:facts][:facter_release_minor] = Caco::Facter.("os", "release", "minor")
+      ctx[:facts][:facter_fqdn] = Caco::Facter.("networking", "fqdn")
     end
 
-    def config_load(ctx, data_path:, **)
+    def config_load(ctx, facts:, data_path:, **)
       # From more generic to specific
       Config.load_and_set_settings(
         data_path.join("common.yaml"),
-        data_path.join("os", "#{ctx[:facter_os_name]}.yaml"),
-        data_path.join("os", "#{ctx[:facter_os_name]}", "#{ctx[:facter_distro_codename]}.yaml"),
+        data_path.join("os", "#{facts[:facter_os_name]}.yaml"),
+        data_path.join("os", "#{facts[:facter_os_name]}", "#{facts[:facter_distro_codename]}.yaml"),
         # maybe add some organizations here?
         # maybe add some roles here?
-        data_path.join("nodes", "#{ctx[:facter_fqdn]}"),
+        data_path.join("nodes", "#{facts[:facter_fqdn]}"),
       )
       Settings.reload!
     end

@@ -8,21 +8,26 @@ module Caco::Debian
 
     step :build_repo_content
     step :build_repo_path
-    step :write_repo_content
+    step Subprocess(Caco::FileWriter),
+      input: :file_writer_input,
+      output: :file_writer_output
 
     def build_repo_content(ctx, params:, url:, release:, component:, **)
-      ctx[:repo_content] = "deb #{url} #{release} #{component}"
+      ctx[:content] = "deb #{url} #{release} #{component}"
       true
     end
 
-    def build_repo_path(ctx, repo_content:, name:, **)
-      ctx[:repo_path] = "/etc/apt/sources.list.d/#{name}.list"
+    def build_repo_path(ctx, name:, **)
+      ctx[:path] = "/etc/apt/sources.list.d/#{name}.list"
     end
 
-    def write_repo_content(ctx, repo_content:, repo_path:, **)
-      result = Caco::FileWriter.(params: {path: repo_path, content: repo_content})
-      ctx[:repo_changed] = result[:file_changed]
-      result.success?
-    end
+    private
+      def file_writer_input(original_ctx, **)
+        { params: { path: original_ctx[:path], content: original_ctx[:content] } }
+      end
+    
+      def file_writer_output(scoped_ctx, file_created:, file_changed:, **)
+        { repo_created: file_created, repo_changed: file_changed }
+      end
   end
 end

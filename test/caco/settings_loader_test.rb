@@ -37,6 +37,7 @@ class Caco::SettingsLoaderTest < Minitest::Test
     # Teardown
     Object.send(:remove_const, :Settings)
     Caco::Facter.set_fake_data = Support.facter_data
+    settings_loader
   end
 
   def fake_json_data
