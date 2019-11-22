@@ -7,13 +7,14 @@ module Caco::Debian
     step :apt_updated
     fail :command_failed
       
-    def apt_needs_update(ctx, params:, **)
+    def apt_needs_update(ctx, **)
+      params = ctx[:params]
       ctx[:apt_needs_update] = !Caco::Debian.apt_updated
-      ctx[:apt_needs_update] = true if params[:force]
+      ctx[:apt_needs_update] = true if params && params[:force]
       ctx[:apt_needs_update]
     end
     
-    def apt_updated(ctx, params:, **)
+    def apt_updated(ctx, **)
       ctx[:apt_updated] = true
       Caco::Debian.apt_updated = true
     end

@@ -34,8 +34,9 @@ require "caco/settings_loader"
 require "caco/version"
 
 # modules
-require "caco/barman"
 require "caco/debian"
+
+require "caco/barman"
 require "caco/haproxy"
 require "caco/postgres"
 require "caco/prometheus"
