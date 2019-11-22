@@ -23,17 +23,31 @@ module Caco::Postgres
     end
 
     def process_single_value(ctx, name:, value:, aug:, **)
-      ctx[:value] = aug.set("/files/postgresql.conf/#{name}", value)
-      aug.save!
+      ctx[:existing_value] = aug.get("/files/postgresql.conf/#{name}")
+      ctx[:created] = !ctx[:existing_value]
+      if ctx[:existing_value] == value
+        return true
+      else
+        ctx[:changed] = true
+        ctx[:value] = aug.set("/files/postgresql.conf/#{name}", value)
+        aug.save!
+      end
       true
     end
 
     def process_multiple_values(ctx, values:, aug:, **)
       ctx[:values] = {}
       values.each_pair do |name, value|
-        ctx[:values][name.to_s] = aug.set("/files/postgresql.conf/#{name}", value)
+        ctx[:existing_value] = aug.get("/files/postgresql.conf/#{name}")
+        ctx[:created] = true unless ctx[:existing_value]
+        if ctx[:existing_value] == value
+          next
+        else
+          ctx[:changed] = true
+          ctx[:values][name.to_s] = aug.set("/files/postgresql.conf/#{name}", value)
+        end
       end
-      aug.save!
+      aug.save! if ctx[:changed]
       true
     end
   end
