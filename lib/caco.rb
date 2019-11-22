@@ -38,6 +38,7 @@ require "caco/version"
 require "caco/debian"
 
 require "caco/barman"
+require "caco/grafana"
 require "caco/haproxy"
 require "caco/postgres"
 require "caco/prometheus"
