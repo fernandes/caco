@@ -1,0 +1,13 @@
+global:
+  slack_api_url: 'https://hooks.slack.com/services/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'
+
+route:
+  receiver: 'slack-notifications'
+  group_by: [alertname, datacenter, app]
+
+receivers:
+- name: 'slack-notifications'
+  slack_configs:
+  - send_resolved: true
+  - channel: '#monitoring'
+    text: 'https://internal.myorg.net/wiki/alerts/{{ .GroupLabels.app }}/{{ .GroupLabels.alertname }}'

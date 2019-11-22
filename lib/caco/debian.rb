@@ -6,6 +6,7 @@ require 'caco/debian/package_installed'
 require 'caco/debian/package_install'
 
 # Templates
+require 'caco/debian/cell/service'
 require 'caco/debian/cell/sources_list'
 
 module Caco

@@ -1,0 +1,8 @@
+[<%= name %>]
+description = "<%= description %>"
+conninfo = host=<%= host %> user=barman dbname=postgres
+streaming_conninfo = host=<%= host %> user=streaming_barman
+backup_method = postgres
+streaming_archiver = on
+archiver = on
+slot_name = barman

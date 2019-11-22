@@ -34,9 +34,13 @@ require "caco/settings_loader"
 require "caco/version"
 
 # modules
+require "caco/barman"
 require "caco/debian"
+require "caco/haproxy"
 require "caco/postgres"
+require "caco/prometheus"
 require "caco/rbenv"
+require "caco/repmgr"
 
 module Caco
   class << self
@@ -50,6 +54,12 @@ end
 class Trailblazer::Cell
   include Cell::Erb
   self.view_paths = [File.expand_path("../", __FILE__)]
+
+  def property(key)
+    return nil if model.nil?
+    return nil unless model.has_key?(key) and model.is_a?(Hash)
+    return model[key]
+  end
 end
 
 class Trailblazer::Operation
