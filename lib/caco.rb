@@ -26,6 +26,7 @@ require "caco/executer"
 
 require "caco/facter"
 require "caco/file_writer"
+require "caco/file_link"
 require "caco/downloader"
 require "caco/finder"
 require "caco/unpacker"
