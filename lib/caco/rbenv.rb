@@ -3,4 +3,5 @@ module Caco
   end
 end
 
+require 'caco/rbenv/install'
 require 'caco/rbenv/cell/profile'
