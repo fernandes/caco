@@ -1,4 +1,5 @@
 require 'caco/debian/apt_repo_add'
+require 'caco/debian/apt_key_install'
 require 'caco/debian/apt_sources_list'
 require 'caco/debian/apt_update'
 require 'caco/debian/package_installed'
