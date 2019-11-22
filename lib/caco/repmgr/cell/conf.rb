@@ -4,8 +4,8 @@ module Caco::Repmgr::Cell
       property(:node_id)
     end
 
-    def node_host
-      property(:node_host)
+    def node_name
+      property(:node_name)
     end
 
     def primary_host

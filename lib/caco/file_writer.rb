@@ -2,11 +2,17 @@ class Caco::FileWriter < Trailblazer::Operation
   step Caco::Macro::ValidateParamPresence(:path)
   step Caco::Macro::ValidateParamPresence(:content)
   step Caco::Macro::NormalizeParams()
+  pass :use_custom_root
   pass :file_exist
   step :calculate_md5
   step :compare_md5, Output(Trailblazer::Activity::Left, :failure) => End(:success)
   step :mkdir_p
   step :write_file
+
+  def use_custom_root(ctx, path:, **)
+    return false unless Caco.config.write_files_root
+    ctx[:path] = "#{Caco.config.write_files_root}#{ctx[:path]}"
+  end
 
   def file_exist(ctx, path:, **)
     ctx[:file_exist] = File.exist?(path)

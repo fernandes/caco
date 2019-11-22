@@ -2,11 +2,7 @@ require "test_helper"
 
 class Caco::DownloaderTest < Minitest::Test
   def setup
-    Caco.config.write_files = true
-  end
-
-  def teardown
-    Caco.config.write_files = false
+    clean_tmp_path
   end
 
   def test_download_a_file

@@ -4,6 +4,7 @@ require 'caco/debian/apt_sources_list'
 require 'caco/debian/apt_update'
 require 'caco/debian/package_installed'
 require 'caco/debian/package_install'
+require 'caco/debian/service_install'
 
 # Templates
 require 'caco/debian/cell/service'

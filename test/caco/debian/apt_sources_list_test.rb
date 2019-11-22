@@ -2,7 +2,7 @@ require "test_helper"
 
 class Caco::Debian::AptSourcesListTest < Minitest::Test
   def setup
-    Caco.config.write_files = false
+    clean_tmp_path
   end
 
   def test_add_default_repo

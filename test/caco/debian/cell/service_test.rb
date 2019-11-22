@@ -2,7 +2,7 @@ require "test_helper"
 
 class Caco::Debian::Cell::ServiceTest < Minitest::Test
   def test_output
-    output = described_class.().to_s
+    output = described_class.(command: "/bin/foo").to_s
     assert_equal output, default_output
   end
 
@@ -10,13 +10,15 @@ class Caco::Debian::Cell::ServiceTest < Minitest::Test
     <<~EOF
     # File Managed, Dot Not Edit
     [Unit]
-    Description=No Description ProvidedAfter=syslog.target network.target network-online.target
+    Description=No Description Provided
+    After=syslog.target network.target network-online.target
 
     [Service]
-
     User=root
     Restart=on-failure
-    ExecStart=[Install]
+    ExecStart=/bin/foo
+
+    [Install]
     WantedBy=multi-user.target
     EOF
   end

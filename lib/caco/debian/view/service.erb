@@ -4,15 +4,12 @@ Description=<%= description %>
 After=syslog.target network.target network-online.target
 
 [Service]
-
 <% if environment_file %>
 EnvironmentFile=<%= environment_file %>
 <% end %>
-
 <% environment_vars.each do |env| %>
-Environment=<% env %>
+Environment=<%= env %>
 <% end %>
-
 User=root
 Restart=on-failure
 ExecStart=<%= command %>

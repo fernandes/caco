@@ -1,6 +1,7 @@
 # Ruby Dependencies
 require 'delegate'
 require 'digest'
+require 'erb'
 require 'json'
 require 'open3'
 
@@ -50,6 +51,20 @@ module Caco
 
   class Error < StandardError; end
   # Your code goes here...
+end
+
+module Cell
+  # Erb contains helpers that are messed up in Rails and do escaping.
+  module Erb
+    def template_options_for(_options)
+      {
+        template_class: ::Tilt::ERBTemplate,
+        escape_html:    false,
+        escape_attrs:   false,
+        suffix:         "erb"
+      }
+    end
+  end
 end
 
 class Trailblazer::Cell

@@ -11,20 +11,20 @@ require 'trailblazer/developer'
 require 'fakefs/safe'
 require 'webmock/minitest'
 
-TMP_PATH = Caco.root.join("tmp").to_s
+TMP_PATH = Caco.root.join("test", "tmp").to_s
+FileUtils.rm_r(TMP_PATH, :force => true) if File.exist?(TMP_PATH)
 Dir.mkdir TMP_PATH unless File.exist? TMP_PATH
+Caco.configure do |config|
+  config.write_files_root = Caco.root.join(TMP_PATH)
+  config.write_files = true
+end
 
 Dir[File.expand_path("../support/**/*.rb", __FILE__)].each { |f| require f }
-
 reporter_options = { color: true, slow_count: 5 }
 Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new(reporter_options)]
 Dev = Trailblazer::Developer
 
 Caco::Facter.set_fake_data = Support.facter_data
-
-Caco.configure do |config|
-  config.write_files = false
-end
 
 class Minitest::Test
   def described_class
@@ -49,6 +49,11 @@ class Minitest::Test
     end
 
     @commander.verify
+  end
+
+  def clean_tmp_path
+    FileUtils.rm_r(TMP_PATH, :force => true) if File.exist?(TMP_PATH)
+    Dir.mkdir TMP_PATH unless File.exist? TMP_PATH
   end
 end
 

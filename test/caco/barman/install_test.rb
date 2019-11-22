@@ -2,7 +2,8 @@ require "test_helper"
 
 class Caco::Barman::InstallTest < Minitest::Test
   def setup
-    Caco.config.write_files = false
+    clean_tmp_path
+    Caco::Debian.apt_updated = false
   end
 
   def test_install_package

@@ -2,13 +2,14 @@ require "test_helper"
 
 class Caco::Repmgr::Cell::ConfTest < Minitest::Test
   def test_output
-    output = described_class.().to_s
+    output = described_class.(node_id: 1, node_name: 'psql1').to_s
     assert_equal output, default_output
   end
 
   def default_output
     <<~EOF    
-    node_id=node_name=''
+    node_id=1
+    node_name='psql1'
     conninfo='host= user= dbname= connect_timeout=2'
     data_directory='/var/lib/postgresql//main'
 
