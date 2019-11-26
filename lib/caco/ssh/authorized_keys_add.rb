@@ -39,6 +39,8 @@ class Caco::Ssh::AuthorizedKeysAdd < Trailblazer::Operation
     FileUtils.mkdir_p(ssh_home)
     File.chmod(0700, ssh_home)
     FileUtils.chown user, nil, ssh_home
+  rescue Errno::EPERM
+    true
   end
 
   def check_user_ssh_authorized_keys(ctx, ssh_home:, user:, **)
@@ -46,7 +48,11 @@ class Caco::Ssh::AuthorizedKeysAdd < Trailblazer::Operation
     unless File.exist?(authorized_keys_path)
       FileUtils.touch(authorized_keys_path)
       File.chmod(0600, authorized_keys_path)
-      FileUtils.chown user, nil, authorized_keys_path
+      begin
+        FileUtils.chown user, nil, authorized_keys_path
+      rescue Errno::EPERM
+        true
+      end
     else
       true
     end
