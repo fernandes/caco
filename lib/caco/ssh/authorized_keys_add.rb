@@ -3,6 +3,10 @@ class Caco::Ssh::AuthorizedKeysAdd < Trailblazer::Operation
   step Caco::Macro::ValidateParamPresence(:identifier)
   step Caco::Macro::ValidateParamPresence(:key)
   step Caco::Macro::NormalizeParams()
+  step Subprocess(Caco::Debian::UserHome),
+    input:  ->(_ctx, user:, **) do { params: {
+      user: user
+    } } end
   step :define_user_path
   step :check_user_ssh_folder
   step :check_user_ssh_authorized_keys
