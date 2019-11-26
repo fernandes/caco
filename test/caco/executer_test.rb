@@ -24,13 +24,13 @@ class Caco::ExecuterTest < Minitest::Test
   def test_multiple_stubs
     @commander = Minitest::Mock.new
     @commander.expect :call, [true, 0, "out 1"], ['command_1']
-    @commander.expect :call, [false, 1, "out 2"], ['command_2']
+    @commander.expect :call, [false, 1, "out 2", "stderror"], ['command_2']
     @commander.expect :call, [true, 0, "out 3"], ['command_3']
 
     described_class.stub :execute, ->(command){ @commander.call(command) } do
-      assert_equal [true, 0, "out 1"], described_class.(params: { command: "command_1" })[:signal]
-      assert_equal [false, 1, "out 2"], described_class.(params: { command: "command_2" })[:signal]
-      assert_equal [true, 0, "out 3"], described_class.(params: { command: "command_3" })[:signal]
+      assert_equal [true, 0, "out 1", nil], described_class.(params: { command: "command_1" })[:signal]
+      assert_equal [false, 1, "out 2", "stderror"], described_class.(params: { command: "command_2" })[:signal]
+      assert_equal [true, 0, "out 3", nil], described_class.(params: { command: "command_3" })[:signal]
     end
 
     @commander.verify
