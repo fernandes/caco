@@ -5,5 +5,6 @@ cache: bundler
 rvm:
   - 2.5.3
 before_install:
+  - sudo adduser --disabled-password --quiet --gecos "" fernandes
   - gem install bundler -v 2.0.1
   - sudo apt-get -y install libaugeas-dev
