@@ -7,7 +7,7 @@ class Caco::Postgres::SqlTest < Minitest::Test
 
   def test_success_sql_command
     returns = [
-      [[true, 0, ""], ["su -c \"psql -d postgres -c 'select now();'\" postgres"]],
+      [[true, 0, ""], ["su -l -c \"psql -e -U postgres -d postgres <<EOF\n      select now();\n      EOF\n      \" postgres"]],
     ]
 
     executer_stub(returns) do
@@ -19,7 +19,7 @@ class Caco::Postgres::SqlTest < Minitest::Test
 
   def test_failure_sql_command
     returns = [
-      [[false, 1, "invalid query"], ["su -c \"psql -d postgres -c 'select now();'\" postgres"]],
+      [[false, 1, "invalid query"], ["su -l -c \"psql -e -U postgres -d postgres <<EOF\n      select now();\n      EOF\n      \" postgres"]],
     ]
 
     executer_stub(returns) do
