@@ -39,9 +39,7 @@ class Caco::FileWriter < Trailblazer::Operation
 
   def write_file(ctx, path:, content:, file_exist:, **)
     if Caco.config.write_files
-      File.open(path, File::RDWR|File::CREAT, 0644) do |f|
-        f.write(content)
-      end
+      File.write(path, content)
     end
     ctx[:file_created] = !file_exist
     ctx[:file_changed] = true

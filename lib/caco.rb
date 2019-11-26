@@ -46,6 +46,7 @@ require "caco/prometheus"
 require "caco/rbenv"
 require "caco/repmgr"
 require "caco/ssh"
+require "caco/sudo"
 
 module Caco
   class << self
