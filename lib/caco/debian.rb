@@ -6,6 +6,7 @@ require 'caco/debian/package_installed'
 require 'caco/debian/package_install'
 require 'caco/debian/service_install'
 require 'caco/debian/user_home'
+require 'caco/debian/add_user'
 
 # Templates
 require 'caco/debian/cell/service'
