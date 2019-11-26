@@ -45,6 +45,7 @@ require "caco/postgres"
 require "caco/prometheus"
 require "caco/rbenv"
 require "caco/repmgr"
+require "caco/ssh"
 
 module Caco
   class << self

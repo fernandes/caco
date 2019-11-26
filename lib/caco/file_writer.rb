@@ -11,7 +11,9 @@ class Caco::FileWriter < Trailblazer::Operation
 
   def use_custom_root(ctx, path:, **)
     return false unless Caco.config.write_files_root
-    ctx[:path] = "#{Caco.config.write_files_root}#{ctx[:path]}"
+    unless ctx[:path].start_with?(Caco.config.write_files_root.to_s)
+      ctx[:path] = "#{Caco.config.write_files_root}#{ctx[:path]}"
+    end
   end
 
   def file_exist(ctx, path:, **)

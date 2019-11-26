@@ -46,6 +46,14 @@ class Caco::FileWriterTest < Minitest::Test
     assert_equal File.read("#{TMP_PATH}/file_writer/path/to/file"), output_data
   end
 
+  def test_when_prefix_with_tmp_path_do_not_duplicate_it
+    result = described_class.(params: {path: "#{TMP_PATH}/file_writer/path/to/file", content: output_data})
+    assert result.success?
+    assert result[:file_created]
+    assert result[:file_changed]
+    assert_equal File.read("#{TMP_PATH}/file_writer/path/to/file"), output_data
+  end
+
   def output_data
     <<~EOF
     Hello World
