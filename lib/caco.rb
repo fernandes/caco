@@ -47,6 +47,7 @@ require "caco/rbenv"
 require "caco/repmgr"
 require "caco/ssh"
 require "caco/sudo"
+require "caco/timescale"
 
 module Caco
   class << self
