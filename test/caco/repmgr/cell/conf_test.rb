@@ -2,7 +2,7 @@ require "test_helper"
 
 class Caco::Repmgr::Cell::ConfTest < Minitest::Test
   def test_output
-    output = described_class.(node_id: 1, node_name: 'psql1').to_s
+    output = described_class.(node_id: 1, node_name: 'psql1', postgres_version: 12).to_s
     assert_equal output, default_output
   end
 
@@ -11,16 +11,16 @@ class Caco::Repmgr::Cell::ConfTest < Minitest::Test
     node_id=1
     node_name='psql1'
     conninfo='host= user= dbname= connect_timeout=2'
-    data_directory='/var/lib/postgresql//main'
+    data_directory='/var/lib/postgresql/12/main'
 
     use_replication_slots=yes
     monitoring_history=yes
 
-    service_start_command   = 'sudo /usr/bin/pg_ctlcluster  main start'
-    service_stop_command    = 'sudo /usr/bin/pg_ctlcluster  main stop'
-    service_restart_command = 'sudo /usr/bin/pg_ctlcluster  main restart'
-    service_reload_command  = 'sudo /usr/bin/pg_ctlcluster  main reload'
-    service_promote_command = 'sudo /usr/bin/pg_ctlcluster  main promote'
+    service_start_command   = 'sudo /usr/bin/pg_ctlcluster 12 main start'
+    service_stop_command    = 'sudo /usr/bin/pg_ctlcluster 12 main stop'
+    service_restart_command = 'sudo /usr/bin/pg_ctlcluster 12 main restart'
+    service_reload_command  = 'sudo /usr/bin/pg_ctlcluster 12 main reload'
+    service_promote_command = 'sudo /usr/bin/pg_ctlcluster 12 main promote'
 
     promote_check_timeout = 15
 
