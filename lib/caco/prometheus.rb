@@ -3,6 +3,7 @@ module Caco
   end
 end
 
+require 'caco/prometheus/install'
 
 # Templates
 require 'caco/prometheus/cell/alertmanager_conf'

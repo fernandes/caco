@@ -2,8 +2,11 @@ require "test_helper"
 
 class Caco::Barman::Cell::GlobalTest < Minitest::Test
   def test_output
-    output = described_class.().to_s
-    assert_equal output, default_output
+    FakeFS do
+      fakefs_clone
+      output = described_class.().to_s
+      assert_equal output, default_output
+    end
   end
 
   def default_output

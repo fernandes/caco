@@ -55,6 +55,34 @@ class Minitest::Test
     FileUtils.rm_r(TMP_PATH, :force => true) if File.exist?(TMP_PATH)
     Dir.mkdir TMP_PATH unless File.exist? TMP_PATH
   end
+
+  def downloader_stub_request(body = "", url: "http://example.com/file")
+    stub_request(:get, url).with(
+      headers: {
+        'Connection'=>'close',
+        'User-Agent'=>'Down/5.0.0'
+      }).to_return(status: 200, body: body, headers: {})
+  end
+
+  def fakefs(&block)
+    FakeFS do
+      fakefs_clone
+
+      yield
+    end
+  end
+
+  def fakefs_clone
+    FileUtils.mkdir_p("/tmp")
+    FakeFS::FileSystem.clone(Caco.root.join("lib", "caco"))
+    FakeFS::FileSystem.clone(Caco.root.join("test", "fixtures"))
+  end
+
+  def fixture_file(name)
+    pathname = Caco.root.join("test", "fixtures", name)
+    raise Caco::FixtureNotExist.new("Fixture file #{name} does not exist") unless File.exist?(pathname)
+    pathname
+  end
 end
 
 Caco::SettingsLoader.(params: {

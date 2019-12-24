@@ -18,17 +18,41 @@ class Caco::DownloaderTest < Minitest::Test
     File.unlink(path) if File.exist?(path)
   end
 
+  def test_stub_download_a_file
+    downloader_stub_request("")
+    tempfile = Tempfile.new('downloader')
+    tempfile.write("stubbed")
+    tempfile.rewind
+    path = "#{Caco.config.write_files_root}/stubbed"
+
+    result = described_class.(params: {url: "http://example.com/file", dest: path}, stubbed_file: tempfile.path)
+    assert result.success?
+
+    assert_equal "stubbed", File.read(path)
+    tempfile.unlink
+  end
+
+  def test_using_fakefs_and_stubbed_file
+    FakeFS do
+      fakefs_clone
+      FileUtils.mkdir_p("/tmp")
+
+      tempfile = Tempfile.new('downloader')
+      tempfile.write("stubbed: test_using_fakefs_and_stubbed_file")
+      tempfile.rewind
+      path = "#{Caco.config.write_files_root}/stubbed"
+
+      result = described_class.(params: {url: "http://example.com/file", dest: path}, stubbed_file: tempfile.path)
+      assert result.success?
+
+      assert_equal "stubbed: test_using_fakefs_and_stubbed_file", File.read(path)
+      File.unlink(path) if File.exist?(path)
+    end
+  end
+
   def stub_output
     <<~EOF
     Hello World
     EOF
-  end
-
-  def downloader_stub_request(body = "")
-    stub_request(:get, "http://example.com/file").with(
-      headers: {
-        'Connection'=>'close',
-        'User-Agent'=>'Down/5.0.0'
-      }).to_return(status: 200, body: stub_output, headers: {})
   end
 end

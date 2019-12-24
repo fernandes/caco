@@ -56,6 +56,8 @@ module Caco
 
   class Error < StandardError; end
   # Your code goes here...
+
+  class FixtureNotExist < StandardError; end
 end
 
 module Cell

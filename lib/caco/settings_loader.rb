@@ -9,6 +9,7 @@ module Caco
     step :set_caco_eyaml_parser
     step :facter_needed_values
     step :config_load
+    step :custom_config
 
     def setup_validate_params(ctx, params:, **)
       ctx[:keys_path] = (params.key?(:keys_path) ? Pathname.new(params[:keys_path]) : Pathname.new(Caco.root.join("keys")))
@@ -56,6 +57,12 @@ module Caco
         data_path.join("nodes", "#{facts[:facter_fqdn]}"),
       )
       Settings.reload!
+    end
+
+    def custom_config(ctx, **)
+      Settings.prometheus = Config::Options.new
+      Settings.prometheus.root = "/opt/prometheus"
+      Settings.prometheus.config_root = "/etc/prometheus"
     end
   end
 end
