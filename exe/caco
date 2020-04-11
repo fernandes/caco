@@ -3,10 +3,25 @@
 require "caco"
 
 ENV['CACO_ENV'] ||= 'development'
-APP_PATH = File.expand_path('../', __dir__)
+APP_PATH = Bundler.root
+
 Caco.root = Pathname.new(APP_PATH)
 
 Caco::SettingsLoader.(params: {
   keys_path: Caco.root.join("keys"),
   data_path: Caco.root.join("data")
 })
+
+# puts "starting"
+
+fqdn = Caco::Facter.("networking", "fqdn")
+puts "[Caco] Running for: #{fqdn}"
+
+begin
+  require Caco.root.join("nodes", fqdn)
+rescue LoadError => e
+  path = Caco.root.join("nodes", fqdn).to_s
+  puts "Could not find manifest at #{path}.rb"
+end
+
+# puts "finishing"

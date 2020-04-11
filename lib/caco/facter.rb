@@ -18,20 +18,21 @@ module Caco::Facter
     end
 
     def call(*items)
-      value = json_data.dig(*items)
+      value = json_data(*items).dig(*items)
       raise KeyNotFoundError.new("#{items.join(":")} not found") unless value
       value
     end
 
     private
-      def json_data
+      def json_data(*items)
         return @@fake_data unless @@fake_data.nil?
 
         @@parsed_data ||= JSON.parse(external_facter_data)
       end
 
       def external_facter_data
-        result = Caco::Executer.(params: { command: "facter -j" })
+        facter_path = Caco::Executer.(params: { command: "which facter" })[:output].chomp!
+        result = Caco::Executer.(params: { command: "#{facter_path} -j" })
         result[:output]
       end
   end

@@ -9,6 +9,18 @@ require 'open3'
 require 'augeas'
 require 'cells-erb'
 require 'config'
+require 'declarative'
+# Monkey Patching to remove !Warning!
+module Declarative
+  class Defaults
+    def handle_array_and_deprecate(variables)
+      wrapped = Defaults.wrap_arrays(variables)
+
+      variables.merge(wrapped)
+    end
+  end
+end
+
 require 'down'
 require 'down/http'
 Down.backend Down::Http

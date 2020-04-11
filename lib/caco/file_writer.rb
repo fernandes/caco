@@ -18,6 +18,8 @@ class Caco::FileWriter < Trailblazer::Operation
 
   def file_exist(ctx, path:, **)
     ctx[:file_exist] = File.exist?(path)
+    ctx[:file_created] = !ctx[:file_exist]
+    ctx[:file_exist]
   end
 
   def calculate_md5(ctx, path:, file_exist:, content:, **)
@@ -26,7 +28,9 @@ class Caco::FileWriter < Trailblazer::Operation
   end
 
   def compare_md5(ctx, content_md5:, current_md5:, **)
-    content_md5 != current_md5
+    different_md5 = (content_md5 != current_md5)
+    ctx[:file_changed] = different_md5 ? true : false
+    different_md5
   end
 
   def mkdir_p(ctx, path:, **)
