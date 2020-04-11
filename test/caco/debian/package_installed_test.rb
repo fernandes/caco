@@ -8,7 +8,7 @@ class Caco::Debian::PackageInstalledTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      result = described_class.(params: { package: "package" })
+      result = described_class.(package: "package")
       assert result.success?
     end
   end
@@ -19,7 +19,7 @@ class Caco::Debian::PackageInstalledTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      result = described_class.(params: { package: "package" })
+      result = described_class.(package: "package")
       assert result.failure?
     end
   end
@@ -31,7 +31,7 @@ class Caco::Debian::PackageInstalledTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      result = described_class.(params: { package: "package" })
+      result = described_class.(package: "package")
       assert result.failure?
     end
   end
@@ -43,7 +43,7 @@ class Caco::Debian::PackageInstalledTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      result = described_class.(params: { package: "package" })
+      result = described_class.(package: "package")
       assert result.failure?
     end
   end

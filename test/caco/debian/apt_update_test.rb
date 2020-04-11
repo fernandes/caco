@@ -9,7 +9,7 @@ class Caco::Debian::AptUpdateTest < Minitest::Test
     returns = [[[true, 0, ""], ['apt-get update']]]
 
     executer_stub(returns) do
-      result = described_class.(params: {})
+      result = described_class.()
       assert result.success?
       assert result[:apt_needs_update]
       assert result[:apt_updated]
@@ -20,7 +20,7 @@ class Caco::Debian::AptUpdateTest < Minitest::Test
   def test_bypass_when_updated
     Caco::Debian.apt_updated = true
 
-    result = described_class.(params: {})
+    result = described_class.()
     assert result.success?
     refute result[:apt_needs_update]
     refute result[:apt_updated]
@@ -32,7 +32,7 @@ class Caco::Debian::AptUpdateTest < Minitest::Test
     returns = [[[true, 0, ""], ['apt-get update']]]
 
     executer_stub(returns) do
-      result = described_class.(params: {force: true})
+      result = described_class.(force: true)
       assert result.success?
       assert result[:apt_needs_update]
       assert result[:apt_updated]
@@ -44,7 +44,7 @@ class Caco::Debian::AptUpdateTest < Minitest::Test
     returns = [[[false, 1, ""], ['apt-get update']]]
 
     executer_stub(returns) do
-      result = described_class.(params: {force: true})
+      result = described_class.(force: true)
       assert result.failure?
       assert result[:apt_needs_update]
       refute result[:apt_updated]

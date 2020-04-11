@@ -1,7 +1,5 @@
 module Caco
   class Executer < Trailblazer::Operation
-    step Caco::Macro::ValidateParamPresence(:command)
-    step Caco::Macro::NormalizeParams()
     step :execute!
 
     def execute!(ctx, command:, **)

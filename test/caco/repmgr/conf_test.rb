@@ -6,7 +6,7 @@ class Caco::Repmgr::ConfTest < Minitest::Test
   end
 
   def test_add_sudoers_file
-    params = { params: { node_id: 1, node_name: "db1", postgres_version: 12 } }
+    params = { node_id: 1, node_name: "db1", postgres_version: 12 }
     # Dev.wtf?(described_class, params)
     result = described_class.(params)
     assert result.success?
@@ -14,22 +14,22 @@ class Caco::Repmgr::ConfTest < Minitest::Test
     assert result[:changed]
 
     # Test File Config
-    result = Caco::FileReader.(params: { path: "/etc/repmgr.conf" })
+    result = Caco::FileReader.(path: "/etc/repmgr.conf")
     assert_equal config_content, result[:output]
   end
 
   def test_change_sudoers_file
-    params = { params: { node_id: 1, node_name: "dbX", postgres_version: 12 } }
+    params = { node_id: 1, node_name: "dbX", postgres_version: 12 }
     described_class.(params)
 
-    params = { params: { node_id: 1, node_name: "db1", postgres_version: 12 } }
+    params = { node_id: 1, node_name: "db1", postgres_version: 12 }
     result = described_class.(params)
     assert result.success?
     refute result[:created]
     assert result[:changed]
 
     # Test File Config
-    result = Caco::FileReader.(params: { path: "/etc/repmgr.conf" })
+    result = Caco::FileReader.(path: "/etc/repmgr.conf")
     assert_equal config_content, result[:output]
   end
 

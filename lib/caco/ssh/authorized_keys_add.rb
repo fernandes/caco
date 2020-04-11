@@ -1,38 +1,60 @@
 class Caco::Ssh::AuthorizedKeysAdd < Trailblazer::Operation
-  step Caco::Macro::ValidateParamPresence(:user)
-  step Caco::Macro::ValidateParamPresence(:identifier)
-  step Caco::Macro::ValidateParamPresence(:key)
-  step Caco::Macro::NormalizeParams()
   step Subprocess(Caco::Debian::UserHome),
-    input:  ->(_ctx, user:, **) do { params: {
+    input: ->(_ctx, user:, **) {{
       user: user
-    } } end
-  step :define_user_path
+    }}
+
+  step ->(ctx, user:, **) {
+      ctx[:user_home] = "/home/#{user}"
+    },
+    id: :define_user_path
+
   step :check_user_ssh_folder
+
   step :check_user_ssh_authorized_keys
+
   step Subprocess(Caco::FileReader),
-    input:  ->(_ctx, user_home:, **) do { params: {
+    input: ->(_ctx, user_home:, **) {{
       path: "#{user_home}/.ssh/authorized_keys",
-    } } end,
+    }},
     output: [:output]
-  step :check_same_entry_exist,
+
+  step ->(ctx, key:, identifier:, output:, **) {
+      output.match?("^#{key} #{identifier}$")
+    },
     Output(:success) => End(:success),
-    Output(:failure) => Track(:success)
-  step :check_identifier_exist,
+    Output(:failure) => Track(:success),
+    id: :check_same_entry_exist
+
+  step ->(ctx, identifier:, output:, **) {
+      output.match?("^.*#{identifier}$")
+    },
     Output(:success) => Id(:change_key),
-    Output(:failure) => Id(:add_key)
+    Output(:failure) => Id(:add_key),
+    id: :check_identifier_exist
+
   step :change_key, magnetic_to: nil
+  def change_key(ctx, key:, identifier:, output:, **)
+    output.gsub!(/^.*#{identifier}$/, "#{key} #{identifier}")
+    ctx[:content] = output
+  end
+
   step :add_key, magnetic_to: nil
+  def add_key(ctx, key:, identifier:, output:, **)
+    output << "#{key} #{identifier}\n"
+    ctx[:created] = true
+    ctx[:content] = output
+  end
+
   step Subprocess(Caco::FileWriter),
-    input:  ->(_ctx, authorized_keys_path:, content:, **) do { params: {
+    input: ->(_ctx, authorized_keys_path:, content:, **) {{
       path: authorized_keys_path,
       content: content
-    } } end
-  step :mark_as_changed
-  
-  def define_user_path(ctx, user:, **)
-    ctx[:user_home] = "/home/fernandes"
-  end
+    }}
+  step ->(ctx, **) {
+      ctx[:changed] = true
+    },
+    id: :mark_as_changed
 
   def check_user_ssh_folder(ctx, user:, user_home:, **)
     ctx[:ssh_home] = ssh_home = "#{Caco.config.write_files_root}#{user_home}/.ssh"
@@ -56,28 +78,5 @@ class Caco::Ssh::AuthorizedKeysAdd < Trailblazer::Operation
     else
       true
     end
-  end
-
-  def check_same_entry_exist(ctx, key:, identifier:, output:, **)
-    output.match?("^#{key} #{identifier}$")
-  end
-
-  def check_identifier_exist(ctx, key:, identifier:, output:, **)
-    output.match?("^.*#{identifier}$")
-  end
-
-  def add_key(ctx, key:, identifier:, output:, **)
-    output << "#{key} #{identifier}\n"
-    ctx[:created] = true
-    ctx[:content] = output
-  end
-
-  def change_key(ctx, key:, identifier:, output:, **)
-    output.gsub!(/^.*#{identifier}$/, "#{key} #{identifier}")
-    ctx[:content] = output
-  end
-
-  def mark_as_changed(ctx, **)
-    ctx[:changed] = true
   end
 end

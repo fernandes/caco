@@ -8,7 +8,7 @@ class Caco::Repmgr::NodeRegisteredTest < Minitest::Test
 
     executer_stub(returns) do
       # Dev.wtf?(described_class, {})
-      result = described_class.(params: { node_name: "db2" })
+      result = described_class.(node_name: "db2")
       assert result.success?
       assert result[:node_registered]
     end
@@ -21,7 +21,7 @@ class Caco::Repmgr::NodeRegisteredTest < Minitest::Test
 
     executer_stub(returns) do
       # Dev.wtf?(described_class, {})
-      result = described_class.(params: { node_name: "db2" })
+      result = described_class.(node_name: "db2")
       assert result.failure?
       refute result[:node_registered]
     end

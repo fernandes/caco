@@ -32,10 +32,10 @@ class Minitest::Test
   end
 
   def settings_loader
-    Caco::SettingsLoader.(params: {
+    Caco::SettingsLoader.(
       keys_path: Caco.root.join("test", "fixtures", "keys"),
       data_path: Caco.root.join("test", "fixtures", "data")
-    })
+    )
   end
 
   def executer_stub(returns)
@@ -85,10 +85,10 @@ class Minitest::Test
   end
 end
 
-Caco::SettingsLoader.(params: {
+Caco::SettingsLoader.(
   keys_path: Caco.root.join("test", "fixtures", "keys"),
   data_path: Caco.root.join("test", "fixtures", "data")
-})
+)
 
 class String
   def constantize

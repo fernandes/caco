@@ -7,10 +7,8 @@ class Caco::Debian::AptRepoAddTest < Minitest::Test
 
   def test_add_repo
     result = described_class.(
-      params: {
-        name: "pgdg", url: "http://apt.postgresql.org/pub/repos/apt/",
-        release: "stretch-pgdg", component: "main"
-      }
+      name: "pgdg", url: "http://apt.postgresql.org/pub/repos/apt/",
+      release: "stretch-pgdg", component: "main"
     )
     assert result.success?
     assert result[:repo_created]
@@ -19,13 +17,11 @@ class Caco::Debian::AptRepoAddTest < Minitest::Test
   end
 
   def test_change_repo_on_existing_file
-    Caco::FileWriter.(params: { path: "/etc/apt/sources.list.d/pgdg.list", content: "foo" })
+    Caco::FileWriter.(path: "/etc/apt/sources.list.d/pgdg.list", content: "foo")
 
     params = {
-      params: {
-        name: "pgdg", url: "http://apt.postgresql.org/pub/repos/apt/",
-        release: "stretch-pgdg", component: "main"
-      }
+      name: "pgdg", url: "http://apt.postgresql.org/pub/repos/apt/",
+      release: "stretch-pgdg", component: "main"
     }
 
     # Dev.wtf?(described_class, params)

@@ -11,7 +11,7 @@ class Caco::Postgres::SqlTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      params = { params: {sql: @sql} }
+      params = { sql: @sql }
       result = described_class.(params)
       assert result.success?
     end
@@ -23,7 +23,7 @@ class Caco::Postgres::SqlTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      params = { params: {sql: @sql} }
+      params = { sql: @sql }
       result = described_class.(params)
       assert result.failure?
       assert_equal 1, result[:exit_code]

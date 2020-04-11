@@ -20,7 +20,7 @@ class Caco::Postgres::InstallTest < Minitest::Test
       result = described_class.()
       assert result.success?
 
-      output = Caco::FileReader.(params: {path: "/etc/apt/sources.list.d/pgdg.list"})[:output]
+      output = Caco::FileReader.(path: "/etc/apt/sources.list.d/pgdg.list")[:output]
       repo_content = "deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main"
       assert_equal repo_content, output
     end
@@ -39,10 +39,10 @@ class Caco::Postgres::InstallTest < Minitest::Test
 
     executer_stub(returns) do
       # Dev.wtf?(described_class, {})
-      result = described_class.(params: { install_dev_package: true })
+      result = described_class.(install_dev_package: true)
       assert result.success?
 
-      output = Caco::FileReader.(params: {path: "/etc/apt/sources.list.d/pgdg.list"})[:output]
+      output = Caco::FileReader.(path: "/etc/apt/sources.list.d/pgdg.list")[:output]
       repo_content = "deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main"
       assert_equal repo_content, output
     end

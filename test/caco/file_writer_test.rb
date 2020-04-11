@@ -9,7 +9,7 @@ class Caco::FileWriterTest < Minitest::Test
   end
 
   def test_write_new_file
-    result = described_class.(params: {path: "/file_writer/file", content: output_data})
+    result = described_class.(path: "/file_writer/file", content: output_data)
     assert result.success?
     assert result[:file_created]
     assert result[:file_changed]
@@ -20,7 +20,7 @@ class Caco::FileWriterTest < Minitest::Test
     File.open("#{TMP_PATH}/file_writer/file", File::RDWR|File::CREAT, 0644) do |f|
       f.write(output_data)
     end
-    result = described_class.(params: {path: "/file_writer/file", content: output_data})
+    result = described_class.(path: "/file_writer/file", content: output_data)
     assert result.success?
     refute result[:file_created]
     refute result[:file_changed]
@@ -31,7 +31,7 @@ class Caco::FileWriterTest < Minitest::Test
     File.open("#{TMP_PATH}/file_writer/file", File::RDWR|File::CREAT, 0644) do |f|
       f.write("foo")
     end
-    result = described_class.(params: {path: "/file_writer/file", content: output_data})
+    result = described_class.(path: "/file_writer/file", content: output_data)
     assert result.success?
     refute result[:file_created]
     assert result[:file_changed]
@@ -39,7 +39,7 @@ class Caco::FileWriterTest < Minitest::Test
   end
 
   def test_create_directory_for_path
-    result = described_class.(params: {path: "/file_writer/path/to/file", content: output_data})
+    result = described_class.(path: "/file_writer/path/to/file", content: output_data)
     assert result.success?
     assert result[:file_created]
     assert result[:file_changed]
@@ -47,7 +47,7 @@ class Caco::FileWriterTest < Minitest::Test
   end
 
   def test_when_prefix_with_tmp_path_do_not_duplicate_it
-    result = described_class.(params: {path: "#{TMP_PATH}/file_writer/path/to/file", content: output_data})
+    result = described_class.(path: "#{TMP_PATH}/file_writer/path/to/file", content: output_data)
     assert result.success?
     assert result[:file_created]
     assert result[:file_changed]

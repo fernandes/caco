@@ -6,7 +6,7 @@ class Caco::FinderTest < Minitest::Test
     @commander.expect :call, [true, 0, output_data], ['dpkg -l']
 
     Caco::Executer.stub :execute, ->(command){ @commander.call(command) } do
-      result = described_class.(params: { command: "dpkg -l", regexp: /^ii\s+postgresql-11/ })
+      result = described_class.(command: "dpkg -l", regexp: /^ii\s+postgresql-11/)
       assert result.success?
     end
 
@@ -18,7 +18,7 @@ class Caco::FinderTest < Minitest::Test
     @commander.expect :call, [true, 0, output_data], ['dpkg -l']
 
     Caco::Executer.stub :execute, ->(command){ @commander.call(command) } do
-      result = described_class.(params: { command: "dpkg -l", regexp: /^ii\s+postgresql-12/ })
+      result = described_class.(command: "dpkg -l", regexp: /^ii\s+postgresql-12/)
       assert result.failure?
     end
 

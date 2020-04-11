@@ -8,7 +8,7 @@ class Caco::Repmgr::NodeRegisterPrimaryTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      result = described_class.(params: { node_name: "db1" })
+      result = described_class.(node_name: "db1")
       assert result.success?
     end
   end
@@ -19,7 +19,7 @@ class Caco::Repmgr::NodeRegisterPrimaryTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      result = described_class.(params: { node_name: "db1" })
+      result = described_class.(node_name: "db1")
       assert result.success?
     end
   end
@@ -30,7 +30,7 @@ class Caco::Repmgr::NodeRegisterPrimaryTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      result = described_class.(params: { node_name: "db1" })
+      result = described_class.(node_name: "db1")
       assert result.failure?
     end
   end
@@ -41,7 +41,7 @@ class Caco::Repmgr::NodeRegisterPrimaryTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      result = described_class.(params: { node_name: "db2" })
+      result = described_class.(node_name: "db2")
       assert result.failure?
     end
   end

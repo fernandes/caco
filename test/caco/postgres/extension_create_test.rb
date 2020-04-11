@@ -13,7 +13,7 @@ class Caco::Postgres::ExtensionCreateTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      params = { params: { extension: "foo" } }
+      params = { extension: "foo" }
       result = described_class.(params)
       assert result.success?
 
@@ -34,7 +34,7 @@ class Caco::Postgres::ExtensionCreateTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      params = { params: { extension: "pg_prometheus" } }
+      params = { extension: "pg_prometheus" }
       result = described_class.(params)
       assert result.success?
       refute result[:created]

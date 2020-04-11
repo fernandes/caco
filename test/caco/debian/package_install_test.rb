@@ -8,7 +8,7 @@ class Caco::Debian::PackageInstallTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      result = described_class.(params: {package: "foo"})
+      result = described_class.(package: "foo")
       assert result.success?
       refute result[:already_installed]
     end
@@ -21,7 +21,7 @@ class Caco::Debian::PackageInstallTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      result = described_class.(params: {package: "foo"})
+      result = described_class.(package: "foo")
       assert result.success?
       assert result[:already_installed]
     end

@@ -1,13 +1,11 @@
 module Caco::Repmgr
   class NodeRole < Trailblazer::Operation
-    step Caco::Macro::ValidateParamPresence(:node_name)
-    step Caco::Macro::NormalizeParams()
-
     step Subprocess(NodeRegistered),
-      input:  ->(_ctx, node_name:, **) do { params: {
+      input: ->(_ctx, node_name:, **) {{
         node_name: node_name
-      } } end,
+      }},
       id: :node_registered
+
     step :verify_role
 
     def verify_role(ctx, node_name:, output:, **)

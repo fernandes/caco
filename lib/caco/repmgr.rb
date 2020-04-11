@@ -3,7 +3,6 @@ module Caco
   end
 end
 
-
 require 'caco/repmgr/conf'
 require 'caco/repmgr/install'
 require 'caco/repmgr/node_registered'

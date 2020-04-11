@@ -8,12 +8,6 @@ class Caco::Postgres::HbaSet < Trailblazer::Operation
   TypeLocal = Class.new(Trailblazer::Activity::Signal)
   TypeHost = Class.new(Trailblazer::Activity::Signal)
 
-  step Caco::Macro::ValidateParamPresence(:input)
-  step Caco::Macro::ValidateParamPresence(:type)
-  step Caco::Macro::ValidateParamPresence(:database)
-  step Caco::Macro::ValidateParamPresence(:user)
-  step Caco::Macro::ValidateParamPresence(:method)
-  step Caco::Macro::NormalizeParams()
   step :check_type_is_valid
   step :check_method_is_valid
   step :check_value_exist,
@@ -21,7 +15,10 @@ class Caco::Postgres::HbaSet < Trailblazer::Operation
     Output(:failure) => Track(:success)
   step :check_if_network_value_is_needed
   step :append_value
-  step :mark_as_changed
+  step ->(ctx, **) {
+      ctx[:created] = ctx[:changed] = true
+    },
+    id: :mark_as_changed
 
   def check_type_is_valid(ctx, type:, **)
     raise InvalidType.new("`#{type}' is not a valid type") unless ValidTypes.include?(type)
@@ -64,10 +61,5 @@ class Caco::Postgres::HbaSet < Trailblazer::Operation
       input << "#{type}#{after_type_spaces}#{database}#{after_db_spaces}#{user}#{after_user_spaces}#{ctx[:network]}#{after_network_spaces}#{method}\n"
     end
     ctx[:content] = input
-  end
-
-  def mark_as_changed(ctx, **)
-    ctx[:created] = true
-    ctx[:changed] = true
   end
 end

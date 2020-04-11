@@ -8,15 +8,15 @@ class Caco::Rbenv::InstallTest < Minitest::Test
   def test_install_package
     returns = build_returns
     returns << [[true, 0, ""], ["git clone https://github.com/rbenv/rbenv.git /opt/rbenv"]]
-    returns << [[true, 0, ""], ["[ ! -f /opt/rbenv/libexec/rbenv-realpath.dylib ] && cd /opt/rbenv && src/configure && make -C src"]]
+    returns << [[true, 0, ""], ["[ ! -f /opt/rbenv/libexec/rbenv-realpath.dylib ] && cd /opt/rbenv && src/configure && make -C src; true"]]
 
-    Caco::Rbenv::Install.stub :repo_exist?, false do
+    Caco::Rbenv::Install.stub :repo_exist?, Caco::Rbenv::Install::CloneRepo do
       executer_stub(returns) do
         # Dev.wtf?(described_class, {})
         result = described_class.()
         assert result.success?
         
-        result = Caco::FileReader.(params: {path: "/etc/profile.d/rbenv.sh"})
+        result = Caco::FileReader.(path: "/etc/profile.d/rbenv.sh")
         assert_equal profile_content, result[:output]
       end
     end
@@ -24,7 +24,7 @@ class Caco::Rbenv::InstallTest < Minitest::Test
 
   def test_bypass_git_clone_when_exist
     returns = build_returns
-    returns << [[false, 1, ""], ["[ ! -f /opt/rbenv/libexec/rbenv-realpath.dylib ] && cd /opt/rbenv && src/configure && make -C src"]]
+    returns << [[false, 1, ""], ["[ ! -f /opt/rbenv/libexec/rbenv-realpath.dylib ] && cd /opt/rbenv && src/configure && make -C src; true"]]
 
     Caco::Rbenv::Install.stub :repo_exist?, true do
       executer_stub(returns) do
@@ -32,7 +32,7 @@ class Caco::Rbenv::InstallTest < Minitest::Test
         result = described_class.()
         assert result.success?
         
-        result = Caco::FileReader.(params: {path: "/etc/profile.d/rbenv.sh"})
+        result = Caco::FileReader.(path: "/etc/profile.d/rbenv.sh")
         assert_equal profile_content, result[:output]
       end
     end

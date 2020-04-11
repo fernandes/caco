@@ -7,7 +7,7 @@ class Caco::Rbenv::InstallVersionTest < Minitest::Test
     returns << [[true, 0, ""], [". /etc/profile && /opt/rbenv/bin/rbenv install 2.5.3"]]
 
     executer_stub(returns) do
-      result = described_class.(params: {version: '2.5.3'})
+      result = described_class.(version: '2.5.3')
       assert result.success?
     end
   end
@@ -17,7 +17,7 @@ class Caco::Rbenv::InstallVersionTest < Minitest::Test
     returns << [[true, 0, ""], [". /etc/profile && /opt/rbenv/bin/rbenv versions|egrep --color \"^..2.5.3( |$)\""]]
 
     executer_stub(returns) do
-      result = described_class.(params: {version: '2.5.3'})
+      result = described_class.(version: '2.5.3')
       assert result.success?
     end
   end

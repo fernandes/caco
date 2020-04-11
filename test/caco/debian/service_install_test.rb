@@ -12,7 +12,7 @@ class Caco::Debian::ServiceInstallTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      params = { params: { name: "sidekiq", command: "/var/app/bin/bundle exec sidekiq" } }
+      params = { name: "sidekiq", command: "/var/app/bin/bundle exec sidekiq" }
       # Dev.wtf?(described_class, params)
       result = described_class.(params)
       assert result.success?
@@ -26,7 +26,7 @@ class Caco::Debian::ServiceInstallTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      params = { params: { name: "sidekiq", command: "/var/app/bin/bundle exec sidekiq", environment_file: "/etc/default/sidekiq" } }
+      params = { name: "sidekiq", command: "/var/app/bin/bundle exec sidekiq", environment_file: "/etc/default/sidekiq" }
       # Dev.wtf?(described_class, params)
       result = described_class.(params)
       assert result.success?
@@ -40,11 +40,11 @@ class Caco::Debian::ServiceInstallTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      params = { params: {
+      params = {
         name: "sidekiq",
         command: "/var/app/bin/bundle exec sidekiq",
         environment_vars: ["Var1=Value1", "Var2=Value2"]
-      } }
+      }
       # Dev.wtf?(described_class, params)
       result = described_class.(params)
       assert result.success?

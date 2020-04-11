@@ -1,41 +1,32 @@
 class Caco::Prometheus::AdapterInstallPostgresql < Trailblazer::Operation
-  step Caco::Macro::ValidateParamPresence(:version)
-  step Caco::Macro::ValidateParamPresence(:database)
-  step Caco::Macro::ValidateParamPresence(:host)
-  step Caco::Macro::ValidateParamPresence(:username)
-  step Caco::Macro::ValidateParamPresence(:password)
-  step Caco::Macro::NormalizeParams()
   step :check_root
   step :build_url
   step :mkdir_target
+
   step Subprocess(Caco::Downloader),
-    input:  ->(ctx, params:, url:, dest:, **) do {
-      params: {
-        url: url, dest: dest
-      },
+    input: ->(ctx, url:, dest:, **) {{
+      url: url,
+      dest: dest,
       stubbed_file: ctx[:stubbed_file]    
-    } end
+    }}
+
   step Subprocess(Caco::Unpacker),
-    input:  ->(ctx, adapter_root:, dest:, **) do {
-      params: {
-        pack: dest,
-        dest: adapter_root
-      }
-    } end
+    input: ->(ctx, adapter_root:, dest:, **) {{
+      pack: dest,
+      dest: adapter_root
+    }}
+
   step Subprocess(Caco::FileLink),
-    input:  ->(ctx, current_target:, current_link:, **) do {
-      params: {
-        target: current_target,
-        link: current_link
-      }
-    } end
+    input: ->(ctx, current_target:, current_link:, **) {{
+      target: current_target,
+      link: current_link
+    }}
+
   step Subprocess(Caco::Debian::ServiceInstall),
-    input:  ->(ctx, current_link:, database:, host:, username:, password:, **) do {
-      params: {
-        name: "prometheus-adapter-postgresql",
-        command: "#{current_link}/prometheus-postgresql-adapter -pg-database #{database} -pg-host #{host} -pg-user #{username} -pg-password #{password} -log-level warn"
-      }
-    } end
+    input: ->(ctx, current_link:, database:, host:, username:, password:, **) {{
+      name: "prometheus-adapter-postgresql",
+      command: "#{current_link}/prometheus-postgresql-adapter -pg-database #{database} -pg-host #{host} -pg-user #{username} -pg-password #{password} -log-level warn"
+    }}
 
   def check_root(ctx, version:, **)
     ctx[:root] = Settings.prometheus.root

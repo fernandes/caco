@@ -13,7 +13,7 @@ class Caco::Debian::AptKeyInstallTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      params = { params: {url: @key_url, fingerprint: @key_fingerprint} }
+      params = { url: @key_url, fingerprint: @key_fingerprint }
       result = described_class.(params)
       assert result[:apt_key_executed]
       assert result.success?
@@ -26,7 +26,7 @@ class Caco::Debian::AptKeyInstallTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      params = { params: {url: @key_url, fingerprint: @key_fingerprint} }
+      params = { url: @key_url, fingerprint: @key_fingerprint }
       result = described_class.(params)
       refute result[:apt_key_executed]
       assert result.success?

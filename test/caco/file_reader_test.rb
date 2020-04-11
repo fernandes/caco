@@ -13,13 +13,13 @@ class Caco::FileReaderTest < Minitest::Test
       f.write(output_data)
     end
 
-    result = described_class.(params: {path: "/file_reader/file"})
+    result = described_class.(path: "/file_reader/file")
     assert result.success?
     assert_equal output_data, result[:output]
   end
 
   def test_read_unknown_file
-    result = described_class.(params: {path: "/file_reader/unknown_file"})
+    result = described_class.(path: "/file_reader/unknown_file")
     assert result.failure?
     refute result[:output]
   end

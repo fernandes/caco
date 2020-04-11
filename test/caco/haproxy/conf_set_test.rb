@@ -3,42 +3,42 @@ require "test_helper"
 class Caco::Haproxy::ConfSetTest < Minitest::Test
   def setup
     clean_tmp_path
-    Caco::FileWriter.(params: { path: "/etc/default/haproxy", content: default_config_file})
+    Caco::FileWriter.(path: "/etc/default/haproxy", content: default_config_file)
   end
 
   def test_set_existing_option
-    result = described_class.(params: { name: "CONFIG", value: "/etc/haproxy/haproxy.config" })
+    result = described_class.(name: "CONFIG", value: "/etc/haproxy/haproxy.config")
     assert result.success?
     refute result[:created]
     assert result[:changed]
     assert_equal "/etc/haproxy/haproxy.config", result[:value]
 
     # Test File Config
-    result = Caco::FileReader.(params: { path: "/etc/default/haproxy" })
+    result = Caco::FileReader.(path: "/etc/default/haproxy")
     assert_equal config_after_test_set_existing_option, result[:output]
   end
 
   def test_set_same_option_does_not_change
-    result = described_class.(params: { name: "CONFIG", value: "/etc/haproxy/haproxy.cfg" })
+    result = described_class.(name: "CONFIG", value: "/etc/haproxy/haproxy.cfg")
     assert result.success?
     refute result[:created]
     refute result[:changed]
     assert_equal "/etc/haproxy/haproxy.cfg", result[:value]
 
     # Test File Config
-    result = Caco::FileReader.(params: { path: "/etc/default/haproxy" })
+    result = Caco::FileReader.(path: "/etc/default/haproxy")
     assert_equal default_config_file, result[:output]
   end
 
   def test_set_non_existing_option
-    result = described_class.(params: { name: "EXTRAOPTS", value: "-de -m 32" })
+    result = described_class.(name: "EXTRAOPTS", value: "-de -m 32")
     assert result.success?
     assert_equal "-de -m 32", result[:value]
     assert result[:created]
     assert result[:changed]
 
     # Test File Config
-    result = Caco::FileReader.(params: { path: "/etc/default/haproxy" })
+    result = Caco::FileReader.(path: "/etc/default/haproxy" )
     assert_equal config_after_test_set_non_existing_option, result[:output]
   end
 

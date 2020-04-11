@@ -1,8 +1,4 @@
 class Caco::FileLink < Trailblazer::Operation
-  step Caco::Macro::ValidateParamPresence(:target)
-  step Caco::Macro::ValidateParamPresence(:link)
-  step Caco::Macro::NormalizeParams()
-
   pass :link_exist?
   pass :target_exist?
   step :link_same_target?,
@@ -27,8 +23,8 @@ class Caco::FileLink < Trailblazer::Operation
     ctx[:link_same_target] = (target_realpath == link_realpath)
   end
 
-  def ensure_target!(ctx, params:, target_exist:, **)
-    return false if !target_exist && params[:ensure_target]
+  def ensure_target!(ctx, target_exist:, ensure_target: false, **)
+    return false if !target_exist && ensure_target
     true
   end
 

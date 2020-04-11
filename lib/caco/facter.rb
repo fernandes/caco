@@ -31,8 +31,8 @@ module Caco::Facter
       end
 
       def external_facter_data
-        facter_path = Caco::Executer.(params: { command: "which facter" })[:output].chomp!
-        result = Caco::Executer.(params: { command: "#{facter_path} -j" })
+        facter_path = Caco::Executer.(command: "which facter")[:output].chomp!
+        result = Caco::Executer.(command: "#{facter_path} -j")
         result[:output]
       end
   end

@@ -11,7 +11,7 @@ class Caco::DownloaderTest < Minitest::Test
     path = tempfile.path
     tempfile.unlink
 
-    result = described_class.(params: {url: "http://example.com/file", dest: path})
+    result = described_class.(url: "http://example.com/file", dest: path)
     assert result.success?
 
     assert_equal stub_output, File.read(path)
@@ -25,7 +25,7 @@ class Caco::DownloaderTest < Minitest::Test
     tempfile.rewind
     path = "#{Caco.config.write_files_root}/stubbed"
 
-    result = described_class.(params: {url: "http://example.com/file", dest: path}, stubbed_file: tempfile.path)
+    result = described_class.(url: "http://example.com/file", dest: path, stubbed_file: tempfile.path)
     assert result.success?
 
     assert_equal "stubbed", File.read(path)
@@ -42,7 +42,7 @@ class Caco::DownloaderTest < Minitest::Test
       tempfile.rewind
       path = "#{Caco.config.write_files_root}/stubbed"
 
-      result = described_class.(params: {url: "http://example.com/file", dest: path}, stubbed_file: tempfile.path)
+      result = described_class.(url: "http://example.com/file", dest: path, stubbed_file: tempfile.path)
       assert result.success?
 
       assert_equal "stubbed: test_using_fakefs_and_stubbed_file", File.read(path)

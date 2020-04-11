@@ -3,11 +3,11 @@ require "test_helper"
 class Caco::Ssh::AuthorizedKeysAddTest < Minitest::Test
   def setup
     clean_tmp_path
-    Caco::FileWriter.(params: { path: "/etc/passwd", content: passwd_content})
+    Caco::FileWriter.(path: "/etc/passwd", content: passwd_content)
   end
 
   def test_add_new_key
-    params = { params: { user: "fernandes", identifier: "fernandes@mail.com", key: "ssh-rsa AAAAB3NzaC1==" } }
+    params = { user: "fernandes", identifier: "fernandes@mail.com", key: "ssh-rsa AAAAB3NzaC1==" }
     # Dev.wtf?(described_class, params)
     result = described_class.(params)
     assert result.success?
@@ -15,12 +15,12 @@ class Caco::Ssh::AuthorizedKeysAddTest < Minitest::Test
     assert result[:changed]
 
     # Test File Config
-    result = Caco::FileReader.(params: { path: "/home/fernandes/.ssh/authorized_keys" })
+    result = Caco::FileReader.(path: "/home/fernandes/.ssh/authorized_keys")
     assert_equal "ssh-rsa AAAAB3NzaC1== fernandes@mail.com\n", result[:output]
   end
 
   def test_add_duplicate_key
-    params = { params: { user: "fernandes", identifier: "fernandes@mail.com", key: "ssh-rsa AAAAB3NzaC1==" } }
+    params = { user: "fernandes", identifier: "fernandes@mail.com", key: "ssh-rsa AAAAB3NzaC1==" }
     # add for the first time
     described_class.(params)
 
@@ -31,24 +31,24 @@ class Caco::Ssh::AuthorizedKeysAddTest < Minitest::Test
     refute result[:changed]
 
     # Test File Config
-    result = Caco::FileReader.(params: { path: "/home/fernandes/.ssh/authorized_keys" })
+    result = Caco::FileReader.(path: "/home/fernandes/.ssh/authorized_keys")
     assert_equal "ssh-rsa AAAAB3NzaC1== fernandes@mail.com\n", result[:output]
   end
 
   def test_change_identifier_key
-    params = { params: { user: "fernandes", identifier: "fernandes@mail.com", key: "ssh-rsa AAAAB3NzaC1==" } }
+    params = { user: "fernandes", identifier: "fernandes@mail.com", key: "ssh-rsa AAAAB3NzaC1==" }
     # add for the first time
     described_class.(params)
 
     # then check for duplicated entry
-    params = { params: { user: "fernandes", identifier: "fernandes@mail.com", key: "ssh-rsa AAAAB3NzaC2==" } }
+    params = { user: "fernandes", identifier: "fernandes@mail.com", key: "ssh-rsa AAAAB3NzaC2==" }
     result = described_class.(params)
     assert result.success?
     refute result[:created]
     assert result[:changed]
 
     # Test File Config
-    result = Caco::FileReader.(params: { path: "/home/fernandes/.ssh/authorized_keys" })
+    result = Caco::FileReader.(path: "/home/fernandes/.ssh/authorized_keys")
     assert_equal "ssh-rsa AAAAB3NzaC2== fernandes@mail.com\n", result[:output]
   end
 

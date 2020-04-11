@@ -1,28 +1,25 @@
 module Caco::Repmgr
   class NodeRegisterStandby < Trailblazer::Operation
-    step Caco::Macro::ValidateParamPresence(:node_name)
-    step Caco::Macro::NormalizeParams()
-
     step Subprocess(Caco::Repmgr::NodeRole),
-      input:  ->(_ctx, node_name:, **) do { params: {
+      input: ->(_ctx, node_name:, **) {{
         node_name: node_name
-      } } end,
+      }},
       id: :node_role,
       Output(:success) => Id(:check_existing_id),
       Output(:failure) => Track(:success)
-    step :check_existing_id, magnetic_to: nil,
+
+    step ->(ctx, node_role:, **) {
+        node_role == "standby"
+      },
+      magnetic_to: nil,
       Output(:success) => End(:success),
-      Output(:failure) => End(:failure)
+      Output(:failure) => End(:failure),
+      id: :check_existing_id
 
     step Subprocess(Class.new(Caco::Executer)),
-      input:  ->(_ctx, node_name:, **) do { params: {
+      input: ->(_ctx, node_name:, **) {{
         command: "su - postgres -c 'repmgr standby register'"
-      } } end,
+      }},
       id: :repmgr_register_primary
-    
-    def check_existing_id(ctx, node_role:, **)
-      return true if node_role == "standby"
-      false
-    end
   end
 end

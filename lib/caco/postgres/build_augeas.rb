@@ -1,9 +1,7 @@
 module Caco::Postgres
   def self.BuildAugeas
     task = ->((ctx, flow_options), _) do
-      params = ctx[:params]
-
-      augeas_path = params.has_key?(:augeas_path) ? params[:augeas_path] : "/"
+      augeas_path = ctx[:augeas_path] ? ctx[:augeas_path] : "/"
 
       ctx[:aug] = aug = Augeas::open(augeas_path, nil, Augeas::NO_LOAD)
       aug.clear_transforms

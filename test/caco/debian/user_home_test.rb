@@ -3,11 +3,11 @@ require "test_helper"
 class Caco::Debian::UserHomeTest < Minitest::Test
   def setup
     clean_tmp_path
-    Caco::FileWriter.(params: { path: "/etc/passwd", content: passwd_content})
+    Caco::FileWriter.(path: "/etc/passwd", content: passwd_content)
   end
 
   def test_find_home_for_root
-    params = { params: { user: "root" } }
+    params = { user: "root" }
     result = described_class.(params)
 
     assert result.success?
@@ -15,7 +15,7 @@ class Caco::Debian::UserHomeTest < Minitest::Test
   end
 
   def test_find_home_for_user
-    params = { params: { user: "user" } }
+    params = { user: "user" }
     result = described_class.(params)
 
     assert result.success?
@@ -23,7 +23,7 @@ class Caco::Debian::UserHomeTest < Minitest::Test
   end
 
   def test_fail_for_non_existing_user
-    params = { params: { user: "foo" } }
+    params = { user: "foo" }
     result = described_class.(params)
 
     assert result.failure?
@@ -32,9 +32,9 @@ class Caco::Debian::UserHomeTest < Minitest::Test
 
   def test_bug_not_finding_home
     clean_tmp_path
-    Caco::FileWriter.(params: { path: "/etc/passwd", content: passwd_content_bug})
+    Caco::FileWriter.(path: "/etc/passwd", content: passwd_content_bug)
 
-    params = { params: { user: "foo" } }
+    params = { user: "foo" }
     result = described_class.(params)
 
     assert result.success?

@@ -3,7 +3,7 @@ require "test_helper"
 class Caco::Debian::AddUserTest < Minitest::Test
   def setup
     clean_tmp_path
-    Caco::FileWriter.(params: { path: "/etc/passwd", content: passwd_content})
+    Caco::FileWriter.(path: "/etc/passwd", content: passwd_content)
   end
 
   def test_add_new_user
@@ -12,7 +12,7 @@ class Caco::Debian::AddUserTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      params = { params: { user: "foo" }}
+      params = { user: "foo" }
       result = described_class.(params)
       assert result.success?
       assert result[:created]
@@ -24,7 +24,7 @@ class Caco::Debian::AddUserTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      params = { params: { user: "user" }}
+      params = { user: "user" }
       result = described_class.(params)
       assert result.success?
       refute result[:created]

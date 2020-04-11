@@ -22,7 +22,7 @@ class Caco::Prometheus::InstallTest < Minitest::Test
         [[true, 0, ""], ["systemctl daemon-reload"]],
       ]
       
-      args = {params: {version: version}, stubbed_file: stubbed_file}
+      args = { version: version, stubbed_file: stubbed_file }
       executer_stub(returns) do
         # Dev.wtf?(described_class, args)
         result = described_class.(args)

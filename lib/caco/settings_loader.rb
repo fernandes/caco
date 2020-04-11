@@ -2,7 +2,6 @@ require_relative "./settings_loader_monkeypatch"
 
 module Caco
   class SettingsLoader < Trailblazer::Operation
-    step Caco::Macro::NormalizeParams()
     step :setup_validate_params
     step :config_setup
     step :hiera_setup_keys
@@ -11,9 +10,9 @@ module Caco
     step :config_load
     step :custom_config
 
-    def setup_validate_params(ctx, params:, **)
-      ctx[:keys_path] = (params.key?(:keys_path) ? Pathname.new(params[:keys_path]) : Pathname.new(Caco.root.join("keys")))
-      ctx[:data_path] = (params.key?(:data_path) ? Pathname.new(params[:data_path]) : Pathname.new(Caco.root.join("data")))
+    def setup_validate_params(ctx, keys_path: nil, data_path: nil, **)
+      ctx[:keys_path] = !keys_path.nil? ? Pathname.new(keys_path) : Pathname.new(Caco.root.join("keys"))
+      ctx[:data_path] = !data_path.nil? ? Pathname.new(data_path) : Pathname.new(Caco.root.join("data"))
     end
 
     def config_setup(ctx, **)
@@ -22,7 +21,7 @@ module Caco
         config.use_env = true
       end
     end
-    
+
     def hiera_setup_keys(ctx, keys_path:, **)
       Hiera::Backend::Eyaml::Options[:pkcs7_public_key] = keys_path.join("public_key.pkcs7.pem")
       Hiera::Backend::Eyaml::Options[:pkcs7_private_key] = keys_path.join("private_key.pkcs7.pem")

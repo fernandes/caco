@@ -17,10 +17,10 @@ class Caco::Timescale::InstallTest < Minitest::Test
 
     executer_stub(returns) do
       # Dev.wtf?(described_class, {})
-      result = described_class.(params: { postgres_version: "11" })
+      result = described_class.(postgres_version: "11")
       assert result.success?
 
-      output = Caco::FileReader.(params: {path: "/etc/apt/sources.list.d/timescale.list"})[:output]
+      output = Caco::FileReader.(path: "/etc/apt/sources.list.d/timescale.list")[:output]
       repo_content = "deb https://packagecloud.io/timescale/timescaledb/debian/ stretch main"
       assert_equal repo_content, output
     end

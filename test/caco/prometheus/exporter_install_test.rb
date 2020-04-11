@@ -25,18 +25,16 @@ class Caco::Prometheus::ExporterInstallTest < Minitest::Test
       ]
 
       args = {
-        params: {
-          version: version,
-          url: "https://github.com/wrouesnel/postgres_exporter/releases/download/v#{version}/postgres_exporter_v#{version}_linux-amd64.tar.gz",
-          tar_dest_path: "#{Settings.prometheus.root}/postgres_exporter_v#{version}_linux-amd64.tar.gz",
-          tar_unpack_path: "#{Settings.prometheus.root}",
-          current_target: "#{Settings.prometheus.root}/postgres_exporter_v#{version}_linux-amd64",
-          current_link: "#{Settings.prometheus.root}/postgres_exporter-current",
-          environment_vars: [ "DATA_SOURCE_NAME=\"user=prometheus password=oftpix7iyUAx host=127.0.0.1 sslmode=disable\"" ],
-          environment_file: nil,
-          service_name: "prometheus-exporter-postgres",
-          service_command: "/opt/prometheus/postgres_exporter-current/postgres_exporter"
-        },
+        version: version,
+        url: "https://github.com/wrouesnel/postgres_exporter/releases/download/v#{version}/postgres_exporter_v#{version}_linux-amd64.tar.gz",
+        tar_dest_path: "#{Settings.prometheus.root}/postgres_exporter_v#{version}_linux-amd64.tar.gz",
+        tar_unpack_path: "#{Settings.prometheus.root}",
+        current_target: "#{Settings.prometheus.root}/postgres_exporter_v#{version}_linux-amd64",
+        current_link: "#{Settings.prometheus.root}/postgres_exporter-current",
+        environment_vars: [ "DATA_SOURCE_NAME=\"user=prometheus password=oftpix7iyUAx host=127.0.0.1 sslmode=disable\"" ],
+        environment_file: nil,
+        service_name: "prometheus-exporter-postgres",
+        service_command: "/opt/prometheus/postgres_exporter-current/postgres_exporter",
         stubbed_file: stubbed_file
       }
       executer_stub(returns) do

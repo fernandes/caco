@@ -6,10 +6,7 @@ class Caco::Debian::AptSourcesListTest < Minitest::Test
   end
 
   def test_add_default_repo
-    result = described_class.(
-      params: {
-      }
-    )
+    result = described_class.()
     assert result.success?
     assert_equal default_output, result[:content]
     assert result[:sources_updated]

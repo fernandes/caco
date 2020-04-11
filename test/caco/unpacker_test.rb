@@ -14,7 +14,7 @@ class Caco::UnpackerTest < Minitest::Test
   end
 
   def test_unpack_tar_file
-    params = { params: {pack: FIXTURES_PATH.join("tar_file"), dest: UNPACK_PATH} }
+    params = { pack: FIXTURES_PATH.join("tar_file"), dest: UNPACK_PATH }
     # Dev.wtf?(described_class, params)
     result = described_class.(params)
     assert result.success?
@@ -23,7 +23,7 @@ class Caco::UnpackerTest < Minitest::Test
   end
 
   def test_unpack_tar_gz_file
-    params = { params: {pack: FIXTURES_PATH.join("tar_gz_file"), dest: UNPACK_PATH} }
+    params = { pack: FIXTURES_PATH.join("tar_gz_file"), dest: UNPACK_PATH }
     # Dev.wtf?(described_class, params)
     result = described_class.(params)
     assert result.success?
@@ -32,7 +32,7 @@ class Caco::UnpackerTest < Minitest::Test
   end
 
   def test_unpack_tar_bz2_file
-    params = { params: {pack: FIXTURES_PATH.join("tar_bz2_file"), dest: UNPACK_PATH} }
+    params = { pack: FIXTURES_PATH.join("tar_bz2_file"), dest: UNPACK_PATH }
     # Dev.wtf?(described_class, params)
     result = described_class.(params)
     assert result.success?
@@ -41,7 +41,7 @@ class Caco::UnpackerTest < Minitest::Test
   end
 
   def test_unpack_gz_file
-    params = { params: {pack: FIXTURES_PATH.join("gzip_file"), dest: UNPACK_PATH} }
+    params = { pack: FIXTURES_PATH.join("gzip_file"), dest: UNPACK_PATH }
     # Dev.wtf?(described_class, params)
     result = described_class.(params)
     assert result.success?
@@ -50,7 +50,7 @@ class Caco::UnpackerTest < Minitest::Test
   end
 
   def test_failure_for_unknown_format_file
-    params = { params: {pack: FIXTURES_PATH.join("unknown_format_file"), dest: UNPACK_PATH} }
+    params = { pack: FIXTURES_PATH.join("unknown_format_file"), dest: UNPACK_PATH }
     # Dev.wtf?(described_class, params)
     result = described_class.(params)
     assert result.failure?

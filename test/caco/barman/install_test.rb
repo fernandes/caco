@@ -20,7 +20,7 @@ class Caco::Barman::InstallTest < Minitest::Test
       result = described_class.()
       assert result.success?
 
-      output = Caco::FileReader.(params: {path: "/etc/apt/sources.list.d/2ndquadrant-dl-default-release.list"})[:output]
+      output = Caco::FileReader.(path: "/etc/apt/sources.list.d/2ndquadrant-dl-default-release.list")[:output]
       repo_content = "deb https://dl.2ndquadrant.com/default/release/apt stretch-2ndquadrant main"
       assert_equal repo_content, output
     end

@@ -7,7 +7,7 @@ class Caco::Postgres::UserChangePasswordTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      params = { params: { user: "foo", password: "secret" } }
+      params = { user: "foo", password: "secret" }
       result = described_class.(params)
       assert result.success?
     end

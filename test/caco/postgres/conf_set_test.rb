@@ -5,7 +5,7 @@ class Caco::Postgres::ConfSetTest < Minitest::Test
   include Caco::Postgres::ConfHelper
 
   def test_set_single_value
-    result = described_class.(params: {name: "aug", value: "foo", augeas_path: TMP_PATH})
+    result = described_class.(name: "aug", value: "foo", augeas_path: TMP_PATH)
     assert result.success?
     assert_equal ["foo"], result[:value]
     refute result[:created]
@@ -16,7 +16,7 @@ class Caco::Postgres::ConfSetTest < Minitest::Test
   end
 
   def test_set_single_value_same_value
-    result = described_class.(params: {name: "aug", value: "on", augeas_path: TMP_PATH})
+    result = described_class.(name: "aug", value: "on", augeas_path: TMP_PATH)
     assert result.success?
     assert_equal "on", result[:value]
     refute result[:created]
@@ -27,7 +27,7 @@ class Caco::Postgres::ConfSetTest < Minitest::Test
   end
 
   def test_set_new_config_value
-    result = described_class.(params: {name: "newone", value: "foo", augeas_path: TMP_PATH})
+    result = described_class.(name: "newone", value: "foo", augeas_path: TMP_PATH)
     assert result.success?
     assert_equal ["foo"], result[:value]
     assert result[:created]
@@ -38,7 +38,7 @@ class Caco::Postgres::ConfSetTest < Minitest::Test
   end
 
   def test_set_multiple_values
-    result = described_class.(params: {values: {aug: "foo", bar: "baz", param1: "lol"}, augeas_path: TMP_PATH})
+    result = described_class.(values: {aug: "foo", bar: "baz", param1: "lol"}, augeas_path: TMP_PATH)
     assert result.success?
     assert result[:created]
     assert result[:changed]
@@ -47,7 +47,7 @@ class Caco::Postgres::ConfSetTest < Minitest::Test
     assert_equal ["lol"], result[:values]["param1"]
 
     # wont set to created or changed on second run
-    result = described_class.(params: {values: {aug: "foo", bar: "baz", param1: "lol"}, augeas_path: TMP_PATH})
+    result = described_class.(values: {aug: "foo", bar: "baz", param1: "lol"}, augeas_path: TMP_PATH)
     assert result.success?
     refute result[:created]
     refute result[:changed]

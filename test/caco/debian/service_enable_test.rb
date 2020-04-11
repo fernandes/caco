@@ -9,7 +9,7 @@ class Caco::Debian::ServiceEnableTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      result = described_class.(params: { service: "haproxy" })
+      result = described_class.(service: "haproxy")
       assert result.success?
       assert result[:enabled]
     end
@@ -21,7 +21,7 @@ class Caco::Debian::ServiceEnableTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      result = described_class.(params: { service: "haproxy" })
+      result = described_class.(service: "haproxy")
       assert result.failure?
       refute result[:enabled]
     end
@@ -34,7 +34,7 @@ class Caco::Debian::ServiceEnableTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      result = described_class.(params: { service: "haproxy" })
+      result = described_class.(service: "haproxy")
       assert result.success?
       refute result[:enabled]
     end

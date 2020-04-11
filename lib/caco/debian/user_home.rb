@@ -1,16 +1,17 @@
-class Caco::Debian::UserHome < Trailblazer::Operation
-  step Caco::Macro::ValidateParamPresence(:user)
-  step Caco::Macro::NormalizeParams()
+module Caco::Debian
+  class UserHome < Trailblazer::Operation
+    step Subprocess(Caco::FileReader),
+      input: ->(_ctx, **) {{
+        path: "/etc/passwd",
+      }},
+      output: { output: :passwd_output }
+    step :find_user_home
 
-  step Subprocess(Caco::FileReader),
-    input:  ->(_ctx, **) do { params: {
-      path: "/etc/passwd",
-    } } end
-  step :find_user_home
+    def find_user_home(ctx, user:, passwd_output:, **)
+      match = passwd_output.match(/^#{user}:[^:]*:[^:]*:[^:]*:[^:]*:([^:]*):.*$/)
+      return false unless match
 
-  def find_user_home(ctx, user:, **)
-    match = ctx[:output].match(/^#{user}:[^:]*:[^:]*:[^:]*:[^:]*:([^:]*):.*$/)
-    return false unless match
-    ctx[:user_home] = match[1]
+      ctx[:user_home] = match[1]
+    end
   end
 end

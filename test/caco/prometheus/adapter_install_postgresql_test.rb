@@ -24,13 +24,11 @@ class Caco::Prometheus::AdapterInstallPostgresqlTest < Minitest::Test
       ]
       
       args = {
-        params: {
-          version: version,
-          database: "prometheus",
-          host: "127.0.0.1",
-          username: "prometheus",
-          password: "secret"
-        },
+        version: version,
+        database: "prometheus",
+        host: "127.0.0.1",
+        username: "prometheus",
+        password: "secret",
         stubbed_file: stubbed_file
       }
       executer_stub(returns) do

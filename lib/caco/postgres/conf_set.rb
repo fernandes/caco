@@ -3,8 +3,8 @@ module Caco::Postgres
     ProcessSingleValue = Class.new(Trailblazer::Activity::Signal)
     ProcessMultipleValue = Class.new(Trailblazer::Activity::Signal)
 
-    step Caco::Macro::NormalizeParams()
     step Caco::Postgres::BuildAugeas()
+
     step :define_what_process,
       Output(ProcessSingleValue, :single_value) => Id(:process_single_value),
       Output(ProcessMultipleValue, :multiple_values) => Id(:process_multiple_values),
@@ -12,10 +12,10 @@ module Caco::Postgres
     step :process_single_value, magnetic_to: nil
     step :process_multiple_values, magnetic_to: nil
 
-    def define_what_process(ctx, params:, **)
-      if params.has_key?(:name) && params.has_key?(:value)
+    def define_what_process(ctx, name: nil, names: nil, value: nil, values: nil, **)
+      if name && value
         return ProcessSingleValue
-      elsif params.has_key?(:values) and params.is_a?(Hash)
+      elsif values and values.is_a?(Hash)
         return ProcessMultipleValue
       else
         return false

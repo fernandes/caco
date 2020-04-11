@@ -1,29 +1,28 @@
 module Caco::Postgres
   class ExtensionCreate < Trailblazer::Operation
-    step Caco::Macro::ValidateParamPresence(:extension)
-    step Caco::Macro::NormalizeParams()
-    step Subprocess(Caco::Postgres::Sql),
-      input:  ->(_ctx, extension:, **) do { params: {
-        sql: "select extname from pg_extension where extname='#{extension}';",
-      } } end,
-      id: :sql_find_extension
-    step :verify_extension_exists,
-      Output(:success) => End(:success),
-      Output(:failure) => Track(:success)
-    step Subprocess(Class.new(Caco::Postgres::Sql)),
-      input:  ->(_ctx, extension:, **) do { params: {
-        sql: "create extension #{extension};",
-      } } end,
-      id: :create_extension
-    step :mark_created
-    
-    def verify_extension_exists(ctx, output:, extension:, **)
-      output.match?(/^\s#{extension}$/)
-    end
 
-    def mark_created(ctx, **)
-      ctx[:created] = true
-      ctx[:changed] = true
-    end
+    step Subprocess(Caco::Postgres::Sql),
+      input: ->(_ctx, extension:, **) {{
+        sql: "select extname from pg_extension where extname='#{extension}';",
+      }},
+      id: :sql_find_extension
+
+    step ->(_ctx, output:, extension:, **) {
+        output.match?(/^\s#{extension}$/)
+      },
+      Output(:success) => End(:success),
+      Output(:failure) => Track(:success),
+      id: :verify_extension_exists
+
+    step Subprocess(Class.new(Caco::Postgres::Sql)),
+      input: ->(_ctx, extension:, **) {{
+        sql: "create extension #{extension};",
+      }},
+      id: :create_extension
+
+    step ->(ctx, **) {
+        ctx[:created] = ctx[:changed] = true
+      },
+      id: :mark_created
   end
 end

@@ -2,10 +2,10 @@ require "test_helper"
 
 class Caco::SettingsLoaderTest < Minitest::Test
   def setup
-    Caco::SettingsLoader.(params: {
+    Caco::SettingsLoader.(
       keys_path: Caco.root.join("test", "fixtures", "keys"),
       data_path: Caco.root.join("test", "fixtures", "data")
-    })
+    )
   end
 
   def teardown
@@ -27,10 +27,10 @@ class Caco::SettingsLoaderTest < Minitest::Test
     Object.send(:remove_const, :Settings)
 
     Caco::Facter.use_fake(fake_json_data) do
-      Caco::SettingsLoader.(params: {
+      Caco::SettingsLoader.(
         keys_path: Caco.root.join("test", "fixtures", "keys"),
         data_path: Caco.root.join("test", "fixtures", "data")
-      })
+      )
       assert_equal "darwin", Settings.value
     end
 

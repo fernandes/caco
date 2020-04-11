@@ -18,7 +18,7 @@ class Caco::FileLinkTest < Minitest::Test
   end
 
   def test_create_unexisting_link
-    params = { params: {target: @target, link: @link} }
+    params = { target: @target, link: @link }
     # Dev.wtf?(described_class, params)
     result = described_class.(params)
     assert result.success?
@@ -31,7 +31,7 @@ class Caco::FileLinkTest < Minitest::Test
   def test_change_target_existing_link
     FileUtils.ln_s @target_dummy, @link
 
-    params = { params: {target: @target, link: @link} }
+    params = { target: @target, link: @link }
     # Dev.wtf?(described_class, params)
     result = described_class.(params)
     assert result.success?
@@ -44,7 +44,7 @@ class Caco::FileLinkTest < Minitest::Test
   def test_bypass_target_existing_link
     FileUtils.ln_s @target, @link
 
-    params = { params: {target: @target, link: @link} }
+    params = { target: @target, link: @link }
     # Dev.wtf?(described_class, params)
     result = described_class.(params)
     assert result.success?
@@ -55,7 +55,7 @@ class Caco::FileLinkTest < Minitest::Test
   end
 
   def test_create_link_missing_target
-    params = { params: {target: @target_dummy, link: @link} }
+    params = { target: @target_dummy, link: @link }
     # Dev.wtf?(described_class, params)
     result = described_class.(params)
     assert result.success?
@@ -66,7 +66,7 @@ class Caco::FileLinkTest < Minitest::Test
   end
 
   def test_create_link_missing_target
-    params = { params: {target: @target_dummy, link: @link, ensure_target: true} }
+    params = { target: @target_dummy, link: @link, ensure_target: true }
     # Dev.wtf?(described_class, params)
     result = described_class.(params)
     refute result.success?

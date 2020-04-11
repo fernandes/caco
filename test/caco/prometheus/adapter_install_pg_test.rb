@@ -32,7 +32,7 @@ class Caco::Prometheus::AdapterInstallPgTest < Minitest::Test
         [[true, 0, ""], ["touch /opt/prometheus/pg_prometheus-current/.caco_installed"]],
       ]
       
-      args = {params: {version: version, postgresql_version: 11}, stubbed_file: stubbed_file}
+      args = { version: version, postgresql_version: 11, stubbed_file: stubbed_file }
       executer_stub(returns) do
         # Dev.wtf?(described_class, args)
         result = described_class.(args)

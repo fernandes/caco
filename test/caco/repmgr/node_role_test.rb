@@ -8,7 +8,7 @@ class Caco::Repmgr::NodeRoleTest < Minitest::Test
 
     executer_stub(returns) do
       # Dev.wtf?(described_class, {})
-      result = described_class.(params: { node_name: "db1" })
+      result = described_class.(node_name: "db1")
       assert result.success?
       assert_equal "primary", result[:node_role]
     end
@@ -21,7 +21,7 @@ class Caco::Repmgr::NodeRoleTest < Minitest::Test
 
     executer_stub(returns) do
       # Dev.wtf?(described_class, {})
-      result = described_class.(params: { node_name: "db1" })
+      result = described_class.(node_name: "db1")
       assert result.success?
       assert_equal "standby", result[:node_role]
     end
@@ -34,7 +34,7 @@ class Caco::Repmgr::NodeRoleTest < Minitest::Test
 
     executer_stub(returns) do
       # Dev.wtf?(described_class, {})
-      result = described_class.(params: { node_name: "db2" })
+      result = described_class.(node_name: "db2")
       refute result.success?
     end
   end

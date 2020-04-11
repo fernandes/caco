@@ -2,20 +2,20 @@ require "test_helper"
 
 class Caco::ExecuterTest < Minitest::Test
   def test_real_success
-    result = described_class.(params: { command: "echo 'hello world'" })
+    result = described_class.(command: "echo 'hello world'")
     assert result.success?
     assert_equal 0, result[:exit_code]
     assert_equal "hello world\n", result[:output]
   end
 
   def test_real_output
-    result = described_class.(params: { command: ["echo", "-n", "boom"] })
+    result = described_class.(command: ["echo", "-n", "boom"])
     assert result.success?
     assert_equal "boom", result[:output]
   end
 
   def test_real_exit_code
-    result = described_class.(params: { command: "echo; exit 7" })
+    result = described_class.(command: "echo; exit 7")
     assert result.failure?
     assert_equal 7, result[:exit_code]
   end
@@ -28,9 +28,9 @@ class Caco::ExecuterTest < Minitest::Test
     @commander.expect :call, [true, 0, "out 3"], ['command_3']
 
     described_class.stub :execute, ->(command){ @commander.call(command) } do
-      assert_equal [true, 0, "out 1", nil], described_class.(params: { command: "command_1" })[:signal]
-      assert_equal [false, 1, "out 2", "stderror"], described_class.(params: { command: "command_2" })[:signal]
-      assert_equal [true, 0, "out 3", nil], described_class.(params: { command: "command_3" })[:signal]
+      assert_equal [true, 0, "out 1", nil], described_class.(command: "command_1")[:signal]
+      assert_equal [false, 1, "out 2", "stderror"], described_class.(command: "command_2")[:signal]
+      assert_equal [true, 0, "out 3", nil], described_class.(command: "command_3")[:signal]
     end
 
     @commander.verify

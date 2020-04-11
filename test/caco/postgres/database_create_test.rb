@@ -13,7 +13,7 @@ class Caco::Postgres::DatabaseCreateTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      params = { params: { database: "foo" } }
+      params = { database: "foo" }
       result = described_class.(params)
       assert result.success?
 
@@ -34,7 +34,7 @@ class Caco::Postgres::DatabaseCreateTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      params = { params: { database: "foo" } }
+      params = { database: "foo" }
       result = described_class.(params)
       assert result.success?
       refute result[:created]

@@ -1,44 +1,32 @@
 class Caco::Prometheus::ExporterInstall < Trailblazer::Operation
-  step Caco::Macro::ValidateParamPresence(:version)
-  step Caco::Macro::ValidateParamPresence(:url)
-  step Caco::Macro::ValidateParamPresence(:tar_dest_path)
-  step Caco::Macro::ValidateParamPresence(:tar_unpack_path)
-  step Caco::Macro::ValidateParamPresence(:current_target)
-  step Caco::Macro::ValidateParamPresence(:current_link)
-  step Caco::Macro::ValidateParamPresence(:service_name)
-  step Caco::Macro::ValidateParamPresence(:service_command)
-  step Caco::Macro::NormalizeParams()
   step :check_root
+
   step Subprocess(Caco::Downloader),
-    input:  ->(ctx, params:, url:, tar_dest_path:, **) do {
-      params: {
-        url: url, dest: tar_dest_path
-      },
+    input: ->(ctx, url:, tar_dest_path:, **) {{
+      url: url,
+      dest: tar_dest_path,
       stubbed_file: ctx[:stubbed_file]    
-    } end
+    }}
+
   step Subprocess(Caco::Unpacker),
-    input:  ->(ctx, tar_dest_path:, tar_unpack_path:, **) do {
-      params: {
-        pack: tar_dest_path,
-        dest: tar_unpack_path
-      }
-    } end
+    input: ->(ctx, tar_dest_path:, tar_unpack_path:, **) {{
+      pack: tar_dest_path,
+      dest: tar_unpack_path
+    }}
+
   step Subprocess(Caco::FileLink),
-    input:  ->(ctx, current_target:, current_link:, **) do {
-      params: {
-        target: current_target,
-        link: current_link
-      }
-    } end
+    input: ->(ctx, current_target:, current_link:, **) {{
+      target: current_target,
+      link: current_link
+    }}
+
   step Subprocess(Caco::Debian::ServiceInstall),
-    input:  ->(ctx, service_name:, service_command:, params:, **) do {
-      params: {
-        name: service_name,
-        command: service_command,
-        environment_vars: params[:environment_vars],
-        environment_file: params[:environment_file]
-      }
-    } end
+    input: ->(ctx, service_name:, service_command:, environment_vars: nil, environment_file: nil, **) {{
+      name: service_name,
+      command: service_command,
+      environment_vars: environment_vars,
+      environment_file: environment_file
+    }}
 
   def check_root(ctx, **)
     ctx[:root] = Settings.prometheus.root
