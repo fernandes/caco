@@ -30,11 +30,29 @@ class Caco::Debian::UserHomeTest < Minitest::Test
     assert_nil result[:user_home]
   end
 
+  def test_bug_not_finding_home
+    clean_tmp_path
+    Caco::FileWriter.(params: { path: "/etc/passwd", content: passwd_content_bug})
+
+    params = { params: { user: "foo" } }
+    result = described_class.(params)
+
+    assert result.success?
+    assert_equal "/home/foo", result[:user_home]
+  end
+
   def passwd_content
     <<~EOF
     nobody:*:-2:-2:Unprivileged User:/var/empty:/usr/bin/false              
     root:*:0:0:System Administrator:/var/root:/bin/sh
     user:*:1000:1000:Celso Fernandes:/home/user:/bin/bash
+    EOF
+  end
+
+  def passwd_content_bug
+    <<~EOF
+    systemd-coredump:x:999:999:systemd Core Dumper:/:/usr/sbin/nologin             
+    foo:x:1000:1000::/home/foo:/bin/bash
     EOF
   end
 end

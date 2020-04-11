@@ -12,7 +12,7 @@ module Caco::Debian
 
     step Subprocess(Caco::Executer),
       input:  ->(_ctx, user:, **) do { params: {
-        command: "adduser --disabled-password --quiet #{user}"
+        command: "adduser --disabled-password --gecos '' --quiet --force-badname #{user}"
       } } end
     step :mark_created
 

@@ -8,7 +8,7 @@ class Caco::Debian::AddUserTest < Minitest::Test
 
   def test_add_new_user
     returns = [
-      [[true, 0, ""], ["adduser --disabled-password --quiet foo"]],
+      [[true, 0, ""], ["adduser --disabled-password --gecos '' --quiet --force-badname foo"]],
     ]
 
     executer_stub(returns) do

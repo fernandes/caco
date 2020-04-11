@@ -9,7 +9,7 @@ class Caco::Debian::UserHome < Trailblazer::Operation
   step :find_user_home
 
   def find_user_home(ctx, user:, **)
-    match = ctx[:output].match(/^#{user}:[^:]+:[^:]+:[^:]+:[^:]+:([^:]+):.*$/)
+    match = ctx[:output].match(/^#{user}:[^:]*:[^:]*:[^:]*:[^:]*:([^:]*):.*$/)
     return false unless match
     ctx[:user_home] = match[1]
   end
