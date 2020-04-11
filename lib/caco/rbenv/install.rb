@@ -18,7 +18,13 @@ module Caco::Rbenv
       } } end
 
     def install_packages!(ctx, **)
-      packages = %w(git autoconf bison libssl-dev libyaml-dev libreadline-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm3 libgdbm-dev)
+      packages = []
+      if Caco::Facter.("os", "distro", "codename") == "stretch"
+        packages = %w(git autoconf bison libssl-dev libyaml-dev libreadline-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm3 libgdbm-dev)
+      elsif Caco::Facter.("os", "distro", "codename") == "buster"
+        packages = %w(git autoconf bison libssl-dev libyaml-dev libreadline-dev zlib1g-dev libncurses5-dev libffi-dev libgdbm6 libgdbm-dev)
+      end
+
       packages.each do |package|
         result = Caco::Debian::PackageInstall.({params: {package: package}})
         return false if result.failure?
