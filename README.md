@@ -1,38 +1,92 @@
 # Caco
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/caco`. To experiment with that code, run `bin/console` for an interactive prompt.
+Configure your machines like you develop your web apps
 
-TODO: Delete this and the text above, and describe your gem
+## Usage aka Control Repo
 
-## Installation
+To start using `Caco`, you need a control repo, that is where you add your node config files, keys, certs, whatever makes sense to you.
 
-Add this line to your application's Gemfile:
+Create a new `Gemfile` with `bundle init` and add to it:
 
 ```ruby
 gem 'caco'
 ```
 
-And then execute:
+After you can add your config files under `nodes` folder, with each file being the hostname of your machines:
 
-    $ bundle
+```
+nodes/
+  web.example.com.rb
+  db.example.com.rb
+```
 
-Or install it yourself as:
+This is the minimum you need to start using Caco, a hello world example would be, in `nodes/<hostname>.rb` add
 
-    $ gem install caco
+```ruby
+class HelloWorld < Trailblazer::Operation
+  step Subprocess(Caco::FileWriter),
+    input:  ->(_ctx, **) {{
+      path: "/root/caco.txt",
+      content: 'Hello World From Caco :)'
+    }}
+end
 
-## Usage
+HelloWorld.()
+```
 
-TODO: Write usage instructions here
+Sync your control repo to your remote machine and run `./bin/caco` inside its folder, it will create the `/root/caco.txt` file with `Hello World From Caco :)` content
 
-## Development
+## Data
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+It's useful to share data between your nodes, you can do this on the `data` folder, you can add yaml files and access inside your config files.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+It also has a hierarchy, most specific values overwrite more generic value, files from common to specific are:
 
-## Contributing
+- data/common.yaml
+- data/<os_name>.yaml
+- data/<os_name>/<distro_name>.yaml
+- data/nodes/<hostname>.yaml
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/caco. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+You can also encrypt values with your keys, for the first time you can create them with `eyaml createkeys` command, you add the files:
+
+- keys/private_key.pkcs7.pem
+- keys/public_key.pkcs7.pem
+
+After that you can edit your yaml files with the command `eyaml edit path/to/file.yaml`
+
+It's safe to commit your encrypted yaml files, but remember to never commit your keys, the `keys` folder is also on gitignore.
+
+On your server you also need to sync the `keys` folder to be able to read the values when configuring the nodes.
+
+To read the values, as they are organized as yaml files, considering the structure:
+
+```yaml
+# common.yaml
+---
+prefix:
+  name: Common
+```
+
+```yaml
+# nodes/hostname.yaml
+---
+prefix:
+  name: Hostname
+```
+
+(as node file is more specific it overwrites the common.yaml value)
+
+```ruby
+Caco::Facter.("prefix", "name")
+# => 'Hostname'
+```
+
+## Roadmap
+
+- [ ] Bootstrap control repo via CLI
+- [ ] Sync remote control repo
+- [ ] Run automatically from developer machine
+- [ ] Add operations to run as a _health check_ after the config process to ensure it's working as expected (that can also be used as acceptance test in development environment)
 
 ## License
 
@@ -40,4 +94,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the Caco project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/caco/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the Caco project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/fernandes/caco/blob/master/CODE_OF_CONDUCT.md).
