@@ -16,12 +16,12 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (6.0.1)
+    activesupport (6.0.3.1)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
-      zeitwerk (~> 2.2)
+      zeitwerk (~> 2.2, >= 2.2.2)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
     ansi (1.5.0)
@@ -36,7 +36,7 @@ GEM
       cells (~> 4.0)
       erbse (>= 0.1.1)
     coderay (1.1.2)
-    concurrent-ruby (1.1.5)
+    concurrent-ruby (1.1.6)
     config (2.0.0)
       activesupport (>= 4.2)
       deep_merge (~> 1.2, >= 1.2.1)
@@ -124,7 +124,7 @@ GEM
     http-form_data (2.1.1)
     http-parser (1.2.1)
       ffi-compiler (>= 1.0, < 2.0)
-    i18n (1.7.0)
+    i18n (1.8.2)
       concurrent-ruby (~> 1.0)
     listen (3.2.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
@@ -194,7 +194,7 @@ GEM
       trailblazer-activity (>= 0.10.0, < 1.0.0)
       trailblazer-activity-dsl-linear (>= 0.2.1, < 1.0.0)
       trailblazer-developer (>= 0.0.8)
-    tzinfo (1.2.5)
+    tzinfo (1.2.7)
       thread_safe (~> 0.1)
     uber (0.1.0)
     unf (0.1.4)
@@ -204,7 +204,7 @@ GEM
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
-    zeitwerk (2.2.1)
+    zeitwerk (2.3.0)
 
 PLATFORMS
   ruby
