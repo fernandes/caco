@@ -1,9 +1,9 @@
 # Ruby Dependencies
-require 'delegate'
 require 'digest'
 require 'erb'
 require 'json'
 require 'open3'
+require 'sorbet-runtime'
 
 # Gems
 require 'augeas'
