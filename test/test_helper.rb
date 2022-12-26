@@ -60,7 +60,7 @@ class Minitest::Test
     stub_request(:get, url).with(
       headers: {
         'Connection'=>'close',
-        'User-Agent'=>'Down/5.0.0'
+        'User-Agent'=>'Down/5.3.1'
       }).to_return(status: 200, body: body, headers: {})
   end
 

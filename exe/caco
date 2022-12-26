@@ -18,7 +18,7 @@ fqdn = Caco::Facter.("networking", "fqdn")
 puts "[Caco] Running for: #{fqdn}"
 
 begin
-  require Caco.root.join("nodes", fqdn)
+  require Caco.root.join("nodes", fqdn).to_s
 rescue LoadError => e
   path = Caco.root.join("nodes", fqdn).to_s
   puts "Could not find manifest at #{path}.rb"

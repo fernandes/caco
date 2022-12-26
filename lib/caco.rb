@@ -11,13 +11,11 @@ require 'cells-erb'
 require 'config'
 require 'declarative'
 # Monkey Patching to remove !Warning!
-module Declarative
-  class Defaults
-    def handle_array_and_deprecate(variables)
-      wrapped = Defaults.wrap_arrays(variables)
+Declarative::Defaults.class_eval do
+  def handle_array_and_deprecate(variables)
+    wrapped = Declarative::Defaults.wrap_arrays(variables)
 
-      variables.merge(wrapped)
-    end
+    variables.merge(wrapped)
   end
 end
 
