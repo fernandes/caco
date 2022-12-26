@@ -1,9 +1,24 @@
 module Caco
   class Executer < Trailblazer::Operation
+    class Output < T::Struct
+      prop :success, T::Boolean
+      prop :exit_status, Integer
+      prop :stdout, String
+      prop :stderr, T.nilable(String)
+
+      def success?
+        success
+      end
+    end
+
     step :execute!
 
     def execute!(ctx, command:, **)
-      s, e, o, error = self.class.send(:execute, command)
+      output = self.class.send(:execute, command)
+      s = output.success?
+      e = output.exit_status
+      o = output.stdout
+      error = output.stderr
       ctx[:signal] = [s, e, o, error]
       ctx[:exit_code] = e
       ctx[:output] = o
@@ -13,7 +28,10 @@ module Caco
     end
 
     module ClassMethods
+      extend T::Sig
+
       private
+      sig {params(command: T.any(String,T::Array[String])).returns(Executer::Output)}
       def execute(command)
         stdout = nil
         stderr = nil
@@ -25,7 +43,12 @@ module Caco
           stderr = e.read
           exit_status = t.value
         end
-        return exit_status.success?, exit_status.exitstatus, stdout, stderr
+        Executer::Output.new(
+          success: exit_status.success?,
+          exit_status: exit_status.exitstatus,
+          stdout: stdout,
+          stderr: stderr
+        )
       end
     end
     extend ClassMethods
