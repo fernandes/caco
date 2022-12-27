@@ -3,9 +3,7 @@ require "test_helper"
 class Caco::Debian::AddUserTest < Minitest::Test
   def setup
     clean_tmp_path
-    file "/etc/passwd" do |f|
-      f.content = passwd_content
-    end
+    file "/etc/passwd", content: passwd_content
   end
 
   def test_add_new_user

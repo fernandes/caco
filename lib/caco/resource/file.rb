@@ -34,5 +34,14 @@ class Caco::Resource::File < Caco::Resource::Base
   end
 end
 
-make_dsl(:file, Caco::Resource::File)
+# make_dsl(:file, Caco::Resource::File)
 
+def file(name, **kwargs, &block)
+  resource = Caco::Resource::File.new(name)
+  kwargs.each_pair do |k, v|
+    resource.send("#{k}=", v)
+  end
+  # resource.instance_eval(&block)
+  resource.action!
+  resource.result
+end

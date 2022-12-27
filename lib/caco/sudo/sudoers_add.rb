@@ -12,9 +12,7 @@ module Caco::Sudo
       }}
 
     def write_file(ctx, path:, content:, **)
-      result = file path do |f|
-        f.content = content
-      end
+      result = file path, content: content
 
       ctx[:created] = result[:created]
       ctx[:changed] = result[:changed]

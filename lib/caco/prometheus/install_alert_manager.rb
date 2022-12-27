@@ -51,9 +51,7 @@ class Caco::Prometheus::InstallAlertManager < Trailblazer::Operation
     id: :write_config_template
 
   def write_file(ctx, path:, content:, **)
-    result = file path do |f|
-      f.content = content
-    end
+    result = file path, content: content
 
     ctx[:changed] = result[:changed]
     true
@@ -70,9 +68,7 @@ class Caco::Prometheus::InstallAlertManager < Trailblazer::Operation
     id: :write_alerts_template
 
   def write_alerts_file(ctx, path:, content:, **)
-    result = file path do |f|
-      f.content = content
-    end
+    result = file path, content: content
 
     ctx[:changed] = result[:changed]
     true

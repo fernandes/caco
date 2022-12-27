@@ -1,7 +1,7 @@
 def make_dsl(name, klass)
   define_method(name) do |name, &block|
     resource = klass.new(name)
-    block.call(resource)
+    resource.instance_eval(&block)
     resource.action!
     resource.result
   end
@@ -60,6 +60,7 @@ class Caco::Resource::Base
 
   def result
     {
+      resource: self,
       created: @created,
       changed: @changed
     }
