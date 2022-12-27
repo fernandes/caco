@@ -7,11 +7,13 @@ module Caco::Debian
 
     step :generate_template_content
 
-    step Subprocess(Caco::FileWriter),
-      input: ->(_ctx, service_path:, template_content:, **) {{
-        path: service_path,
-        content: template_content
-      }}
+    step :write_file
+
+    def write_file(ctx, service_path:, template_content:, **)
+      file service_path do |f|
+        f.content = template_content
+      end
+    end
 
     step Subprocess(Caco::Executer),
       input: ->(_ctx, **) {{

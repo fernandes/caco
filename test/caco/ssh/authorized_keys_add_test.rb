@@ -3,7 +3,9 @@ require "test_helper"
 class Caco::Ssh::AuthorizedKeysAddTest < Minitest::Test
   def setup
     clean_tmp_path
-    Caco::FileWriter.(path: "/etc/passwd", content: passwd_content)
+    file "/etc/passwd" do |f|
+      f.content = passwd_content
+    end
   end
 
   def test_add_new_key

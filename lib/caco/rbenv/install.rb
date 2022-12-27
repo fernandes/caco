@@ -19,11 +19,17 @@ module Caco::Rbenv
       },
       id: :build_profile_content
 
-    step Subprocess(Caco::FileWriter),
+    step :write_file,
       input: ->(_ctx, profile_content:, **) {{
         path: "/etc/profile.d/rbenv.sh",
         content: profile_content
       }}
+
+    def write_file(ctx, path:, content:, **)
+      result = file path do |f|
+        f.content = content
+      end
+    end
 
     def install_packages!(ctx, **)
       packages = []

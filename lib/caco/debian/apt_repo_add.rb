@@ -10,8 +10,15 @@ module Caco::Debian
       },
       id: :build_repo_path
 
-    step Subprocess(Caco::FileWriter),
-      input: [:path, :content],
-      output: { file_created: :repo_created, file_changed: :repo_changed }
+    step :write_file
+
+    def write_file(ctx, path:, content:, **)
+      result = file path do |f|
+        f.content = content
+      end
+
+      ctx[:repo_created] = result[:created]
+      ctx[:repo_changed] = result[:changed]
+    end
   end
 end

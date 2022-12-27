@@ -46,15 +46,17 @@ class Caco::Ssh::AuthorizedKeysAdd < Trailblazer::Operation
     ctx[:content] = output
   end
 
-  step Subprocess(Caco::FileWriter),
-    input: ->(_ctx, authorized_keys_path:, content:, **) {{
-      path: authorized_keys_path,
-      content: content
-    }}
+  step :write_key
   step ->(ctx, **) {
       ctx[:changed] = true
     },
     id: :mark_as_changed
+
+  def write_key(ctx, authorized_keys_path:, content:, **)
+    file authorized_keys_path do |f|
+      f.content = content
+    end
+  end
 
   def check_user_ssh_folder(ctx, user:, user_home:, **)
     ctx[:ssh_home] = ssh_home = "#{Caco.config.write_files_root}#{user_home}/.ssh"

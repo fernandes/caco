@@ -19,11 +19,13 @@ class Caco::Haproxy::ConfSet < Trailblazer::Operation
     Output(:success) => End(:success),
     Output(:failure) => Track(:success)
 
-  step Subprocess(Caco::FileWriter),
-    input: ->(_ctx, new_config_content:, **) {{
-      path: "/etc/default/haproxy",
-      content: new_config_content
-    }}
+  step :write_file
+
+  def write_file(ctx, new_config_content:, **)
+    file "/etc/default/haproxy" do |f|
+      f.content = new_config_content
+    end
+  end
 
   def change_value(ctx, output:, name:, value:, **)
     ctx[:created] = false

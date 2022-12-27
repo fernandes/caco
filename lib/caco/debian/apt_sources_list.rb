@@ -8,8 +8,15 @@ module Caco::Debian
     step ->(ctx, **) { ctx[:path] = '/etc/apt/sources.list' },
       id: :build_path
 
-    step Subprocess(Caco::FileWriter),
-      input: [:path, :content],
-      output: { file_changed: :sources_updated }
+    step :write_file
+
+    def write_file(ctx, path:, content:, **)
+      result = file path do |f|
+        f.content = content
+      end
+
+      ctx[:sources_updated] = result[:changed]
+      true
+    end
   end
 end

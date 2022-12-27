@@ -1,3 +1,4 @@
+# typed: false
 module Caco
   class Executer < Trailblazer::Operation
     class Output < T::Struct
@@ -13,7 +14,7 @@ module Caco
 
     step :execute!
 
-    def execute!(ctx, command:, **)
+    def execute!(ctx, command:, **kwargs)
       output = self.class.send(:execute, command)
       s = output.success?
       e = output.exit_status
@@ -33,22 +34,15 @@ module Caco
       private
       sig {params(command: T.any(String,T::Array[String])).returns(Executer::Output)}
       def execute(command)
-        stdout = nil
-        stderr = nil
-        pid = nil
-        exit_status = nil
         Open3.popen3(*command) do |i, o, e, t|
-          pid = t.pid
-          stdout = o.read
-          stderr = e.read
           exit_status = t.value
+          Executer::Output.new(
+            success: exit_status.success?,
+            exit_status: exit_status.exitstatus,
+            stdout: o.read,
+            stderr: e.read
+          )
         end
-        Executer::Output.new(
-          success: exit_status.success?,
-          exit_status: exit_status.exitstatus,
-          stdout: stdout,
-          stderr: stderr
-        )
       end
     end
     extend ClassMethods

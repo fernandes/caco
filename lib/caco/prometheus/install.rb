@@ -44,7 +44,13 @@ class Caco::Prometheus::Install < Trailblazer::Operation
     },
     id: :generate_template!
 
-  step Subprocess(Caco::FileWriter),
-    input: { content: :content, config_file_path: :path },
-    output: { file_changed: :sources_updated }
+  step :write_file
+
+  def write_file(ctx, config_file_path:, content:, **)
+    result = file config_file_path do |f|
+      f.content = content
+    end
+
+    ctx[:sources_updated] = result[:changed]
+  end
 end

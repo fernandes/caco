@@ -3,7 +3,6 @@ require "test_helper"
 class Caco::Sudo::SudoersAddTest < Minitest::Test
   def setup
     clean_tmp_path
-    # Caco::FileWriter.(identifier: "postgres", content: sudoers_content })
   end
 
   def test_add_sudoers_file

@@ -45,18 +45,36 @@ class Caco::Prometheus::InstallAlertManager < Trailblazer::Operation
     },
     id: :generate_template!
 
-  step Subprocess(Caco::FileWriter),
+  step :write_file,
     input: { content: :content, config_file_path: :path },
     output: { file_changed: :sources_updated },
     id: :write_config_template
+
+  def write_file(ctx, path:, content:, **)
+    result = file path do |f|
+      f.content = content
+    end
+
+    ctx[:changed] = result[:changed]
+    true
+  end
 
   step ->(ctx, **) {
       ctx[:alerts_content] = Caco::Prometheus::Cell::Alerts.().to_s
     },
     id: :generate_alerts_template!
 
-  step Subprocess(Class.new(Caco::FileWriter)),
+  step :write_alerts_file, 
     input: { alerts_file_path: :path, alerts_content: :content },
-    output: { file_changed: :sources_updated },
+    output: { changed: :sources_updated },
     id: :write_alerts_template
+
+  def write_alerts_file(ctx, path:, content:, **)
+    result = file path do |f|
+      f.content = content
+    end
+
+    ctx[:changed] = result[:changed]
+    true
+  end
 end

@@ -3,7 +3,9 @@ require "test_helper"
 class Caco::Haproxy::ConfGetTest < Minitest::Test
   def setup
     clean_tmp_path
-    Caco::FileWriter.(path: "/etc/default/haproxy", content: default_config_file)
+    file "/etc/default/haproxy" do |f|
+      f.content = default_config_file
+    end
   end
 
   def test_find_option

@@ -7,12 +7,22 @@ module Caco::Repmgr
 
     step :build_content
 
-    step Subprocess(Caco::FileWriter),
+    step :write_file,
       input: ->(_ctx, path:, content:, **) {{
         path: path,
         content: content
-      }},
-      output: {file_created: :created, file_changed: :changed}
+      }}
+
+
+    def write_file(ctx, path:, content:, **)
+      result = file path do |f|
+        f.content = content
+      end
+
+      ctx[:created] = result[:created]
+      ctx[:changed] = result[:changed]
+      true
+    end
 
     def build_content(ctx, node_id:, node_name:, postgres_version:, **)
       ctx[:content] = Caco::Repmgr::Cell::Conf.(

@@ -1,3 +1,7 @@
+def require_path(path)
+  Dir["#{path}/*.rb"].each {|file| require file }
+end
+
 # Ruby Dependencies
 require 'digest'
 require 'erb'
@@ -34,6 +38,7 @@ require 'trailblazer/cells'
 require "caco/config"
 require "caco/macro"
 require "caco/executer"
+require "caco/resource"
 
 require "caco/facter"
 require "caco/file_writer"
@@ -111,3 +116,5 @@ def trbreaks(klass = nil)
   end
   true
 end
+
+
