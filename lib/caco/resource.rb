@@ -1,4 +1,5 @@
 module Caco::Resource
+  class Invalid < StandardError; end
 end
 
 require "caco/resource/base"

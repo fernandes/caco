@@ -4,6 +4,7 @@
 
 # typed: false
 
+module ::Concurrent::Map; end
 module ::Hashie::Extensions::IndifferentAccess; end
 module ::Hashie::Extensions::RubyVersionCheck; end
 module ANSI::Code; end

@@ -10,6 +10,8 @@ require 'open3'
 require 'sorbet-runtime'
 
 # Gems
+require 'active_support'
+require 'active_model'
 require 'augeas'
 require 'cells-erb'
 require 'config'

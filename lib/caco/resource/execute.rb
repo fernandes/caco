@@ -1,3 +1,4 @@
+# typed: false
 class Caco::Resource::Execute < Caco::Resource::Base
   class Output < T::Struct
     prop :success, T::Boolean

@@ -1,10 +1,17 @@
+# typed: true
 class Caco::Resource::File < Caco::Resource::Base
+  include ActiveModel::Validations
+  extend T::Sig
+
+  sig {returns(String)}
   attr_accessor :content
-  
+
+  sig { void }
   def make_absent
-    File.rm(path)
+    ::File.delete(path)
   end
 
+  sig { void }
   def make_present
     dirname = File.dirname(path)
     file_exist = File.exist?(path)
@@ -25,6 +32,7 @@ class Caco::Resource::File < Caco::Resource::Base
   end
 
   private
+  sig { returns(String) }
   def path
     return name unless Caco.config.write_files_root
     unless name.start_with?(Caco.config.write_files_root.to_s)
@@ -34,12 +42,24 @@ class Caco::Resource::File < Caco::Resource::Base
   end
 end
 
-def file(name, **kwargs, &block)
+extend T::Sig
+
+sig {
+  params(
+    name: String,
+    content: String
+  ).
+  returns(T::Hash[String, String])
+}
+def file(name, content:)
   resource = Caco::Resource::File.new(name)
-  kwargs.each_pair do |k, v|
-    resource.send("#{k}=", v)
+  resource.content = content
+  unless resource.valid?
+    raise Caco::Resource::Invalid.new(
+      "Invalid `file' with errors: #{resource.errors.full_messages}"
+    )
   end
-  # resource.instance_eval(&block)
   resource.action!
   resource.result
 end
+
