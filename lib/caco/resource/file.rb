@@ -34,8 +34,6 @@ class Caco::Resource::File < Caco::Resource::Base
   end
 end
 
-# make_dsl(:file, Caco::Resource::File)
-
 def file(name, **kwargs, &block)
   resource = Caco::Resource::File.new(name)
   kwargs.each_pair do |k, v|

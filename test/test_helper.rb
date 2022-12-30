@@ -41,7 +41,7 @@ class Minitest::Test
   def executer_stub(returns)
     @commander = Minitest::Mock.new
     returns.each do |ret|
-      output = Caco::Executer::Output.new(
+      output = Caco::Resource::Execute::Output.new(
         success: ret[0][0],
         exit_status: ret[0][1],
         stdout: ret[0][2],
@@ -50,7 +50,7 @@ class Minitest::Test
       @commander.expect :call, output, ret[1]
     end
 
-    Caco::Executer.stub :execute, ->(command){ @commander.call(command) } do
+    Caco::Resource::Execute.stub :execute, ->(command){ @commander.call(command) } do
       yield
     end
 

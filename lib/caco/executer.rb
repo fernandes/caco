@@ -15,36 +15,13 @@ module Caco
     step :execute!
 
     def execute!(ctx, command:, **kwargs)
-      output = self.class.send(:execute, command)
-      s = output.success?
-      e = output.exit_status
-      o = output.stdout
-      error = output.stderr
-      ctx[:signal] = [s, e, o, error]
-      ctx[:exit_code] = e
-      ctx[:output] = o
-      ctx[:stderr] = error
+      result = execute(command)
+      ctx[:signal] = result[:signal]
+      ctx[:exit_code] = result[:exit_code]
+      ctx[:output] = result[:output]
+      ctx[:stderr] = result[:stderr]
 
-      return s
+      return ctx[:signal].first
     end
-
-    module ClassMethods
-      extend T::Sig
-
-      private
-      sig {params(command: T.any(String,T::Array[String])).returns(Executer::Output)}
-      def execute(command)
-        Open3.popen3(*command) do |i, o, e, t|
-          exit_status = t.value
-          Executer::Output.new(
-            success: exit_status.success?,
-            exit_status: exit_status.exitstatus,
-            stdout: o.read,
-            stderr: e.read
-          )
-        end
-      end
-    end
-    extend ClassMethods
   end
 end
