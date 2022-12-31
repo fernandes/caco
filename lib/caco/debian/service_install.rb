@@ -10,7 +10,7 @@ module Caco::Debian
     step :write_file
 
     def write_file(ctx, service_path:, template_content:, **)
-      file service_path, content: template_content
+      Caco.file service_path, content: template_content
     end
 
     step Subprocess(Caco::Executer),

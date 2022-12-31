@@ -7,63 +7,68 @@ def make_dsl(name, klass)
   end
 end
 
-class Caco::Resource::Base
-  attr_reader :name, :changed, :created, :performed
+module Caco::Resource
+  class Base
+    include ActiveModel::Validations
+    extend T::Sig
 
-  def initialize(name)
-    @name = name
-    @created = false
-    @changed = false
-    @present = true
-    @performed = false
-  end
+    attr_reader :name, :changed, :created, :performed
 
-  def absent!
-    @present = false
-  end
+    def initialize(name)
+      @name = name
+      @created = false
+      @changed = false
+      @present = true
+      @performed = false
+    end
 
-  def persent!
-    @present = true
-  end
+    def absent!
+      @present = false
+    end
 
-  def present?
-    @present
-  end
+    def persent!
+      @present = true
+    end
 
-  def absent?
-    !@present 
-  end
+    def present?
+      @present
+    end
 
-  def performed?
-    performed
-  end
+    def absent?
+      !@present
+    end
 
-  def action!
-    return if performed?
+    def performed?
+      performed
+    end
 
-    make_absent if absent?
-    make_present if present?
+    def action!
+      return if performed?
 
-  end
+      make_absent if absent?
+      make_present if present?
 
-  def performed!
-    @performed = true
-  end
+    end
 
-  def created!
-    @created = true
-  end
+    def performed!
+      @performed = true
+    end
 
-  def changed!
-    @changed = true
-  end
+    def created!
+      @created = true
+    end
 
-  def result
-    {
-      resource: self,
-      created: @created,
-      changed: @changed
-    }
+    def changed!
+      @changed = true
+    end
+
+    def result
+      {
+        resource: self,
+        created: @created,
+        changed: @changed
+      }
+    end
   end
 end
 

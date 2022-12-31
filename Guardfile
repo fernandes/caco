@@ -40,3 +40,7 @@ guard :minitest do
   # watch(%r{^app/helpers/(.*)\.rb$})     { |m| "test/helpers/#{m[1]}_test.rb" }
   # watch(%r{^app/models/(.*)\.rb$})      { |m| "test/unit/#{m[1]}_test.rb" }
 end
+
+guard :sorbet do
+  watch(/(.*)\.rbi?$/)
+end

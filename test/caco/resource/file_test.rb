@@ -9,7 +9,7 @@ class Caco::Resource::FileTest < Minitest::Test
   end
 
   def test_write_new_file
-    result = file "/file_writer/file",
+    result = Caco.file "/file_writer/file",
       content: output_data
   
     assert result[:created]
@@ -22,7 +22,7 @@ class Caco::Resource::FileTest < Minitest::Test
       f.write(output_data)
     end
 
-    result = file "/file_writer/file", content: output_data
+    result = Caco.file "/file_writer/file", content: output_data
 
     refute result[:created]
     refute result[:changed]
@@ -34,7 +34,7 @@ class Caco::Resource::FileTest < Minitest::Test
     File.open("#{TMP_PATH}/file_writer/file", File::RDWR|File::CREAT, 0644) do |f|
       f.write("foo")
     end
-    result = file "/file_writer/file", content: output_data
+    result = Caco.file "/file_writer/file", content: output_data
 
     # refute result[:created]
     assert result[:changed]
@@ -42,14 +42,14 @@ class Caco::Resource::FileTest < Minitest::Test
   end
 
   def test_create_directory_for_path
-    result = file "/file_writer/path/to/file", content: output_data
+    result = Caco.file "/file_writer/path/to/file", content: output_data
     assert result[:created]
     # assert result[:changed]
     # assert_equal File.read("#{TMP_PATH}/file_writer/path/to/file"), output_data
   end
 
   def test_when_prefix_with_tmp_path_do_not_duplicate_it
-    result = file "#{TMP_PATH}/file_writer/path/to/file", content: output_data
+    result = Caco.file "#{TMP_PATH}/file_writer/path/to/file", content: output_data
     assert result[:created]
     # assert result[:changed]
     # assert_equal File.read("#{TMP_PATH}/file_writer/path/to/file"), output_data

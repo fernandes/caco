@@ -26,7 +26,7 @@ module Caco::Rbenv
       }}
 
     def write_file(ctx, path:, content:, **)
-      result = file path, content: content
+      result = Caco.file path, content: content
     end
 
     def install_packages!(ctx, **)

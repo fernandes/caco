@@ -13,7 +13,7 @@ module Caco::Debian
     step :write_file
 
     def write_file(ctx, path:, content:, **)
-      result = file path, content: content
+      result = Caco.file path, content: content
 
       ctx[:repo_created] = result[:created]
       ctx[:repo_changed] = result[:changed]

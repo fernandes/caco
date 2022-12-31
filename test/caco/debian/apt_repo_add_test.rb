@@ -17,7 +17,7 @@ class Caco::Debian::AptRepoAddTest < Minitest::Test
   end
 
   def test_change_repo_on_existing_file
-    file "/etc/apt/sources.list.d/pgdg.list", content: "foo"
+    Caco.file "/etc/apt/sources.list.d/pgdg.list", content: "foo"
 
     params = {
       name: "pgdg", url: "http://apt.postgresql.org/pub/repos/apt/",

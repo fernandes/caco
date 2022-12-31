@@ -39,6 +39,7 @@ require 'trailblazer/cells'
 # System (order dependant)
 require "caco/config"
 require "caco/macro"
+require "caco/os"
 require "caco/executer"
 require "caco/resource"
 
@@ -64,6 +65,8 @@ require "caco/repmgr"
 require "caco/ssh"
 require "caco/sudo"
 require "caco/timescale"
+
+require "caco/dsl"
 
 module Caco
   class << self

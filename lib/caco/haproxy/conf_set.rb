@@ -22,7 +22,7 @@ class Caco::Haproxy::ConfSet < Trailblazer::Operation
   step :write_file
 
   def write_file(ctx, new_config_content:, **)
-    file "/etc/default/haproxy", content: new_config_content
+    Caco.file "/etc/default/haproxy", content: new_config_content
   end
 
   def change_value(ctx, output:, name:, value:, **)

@@ -7,6 +7,7 @@ gemspec
 group :development do
   gem 'guard' # NOTE: this is necessary in newer versions
   gem 'guard-minitest'
+  gem 'guard-sorbet'
   gem 'pry'
   gem 'pry-byebug'
 end

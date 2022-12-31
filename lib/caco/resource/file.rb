@@ -42,24 +42,3 @@ class Caco::Resource::File < Caco::Resource::Base
   end
 end
 
-extend T::Sig
-
-sig {
-  params(
-    name: String,
-    content: String
-  ).
-  returns(T::Hash[String, String])
-}
-def file(name, content:)
-  resource = Caco::Resource::File.new(name)
-  resource.content = content
-  unless resource.valid?
-    raise Caco::Resource::Invalid.new(
-      "Invalid `file' with errors: #{resource.errors.full_messages}"
-    )
-  end
-  resource.action!
-  resource.result
-end
-

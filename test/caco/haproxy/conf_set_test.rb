@@ -3,7 +3,7 @@ require "test_helper"
 class Caco::Haproxy::ConfSetTest < Minitest::Test
   def setup
     clean_tmp_path
-    file "/etc/default/haproxy", content: default_config_file
+    Caco.file "/etc/default/haproxy", content: default_config_file
   end
 
   def test_set_existing_option

@@ -3,7 +3,7 @@ require "test_helper"
 class Caco::Debian::UserHomeTest < Minitest::Test
   def setup
     clean_tmp_path
-    file "/etc/passwd", content: passwd_content
+    Caco.file "/etc/passwd", content: passwd_content
   end
 
   def test_find_home_for_root
@@ -32,7 +32,7 @@ class Caco::Debian::UserHomeTest < Minitest::Test
 
   def test_bug_not_finding_home
     clean_tmp_path
-    file "/etc/passwd", content: passwd_content_bug
+    Caco.file "/etc/passwd", content: passwd_content_bug
 
     params = { user: "foo" }
     result = described_class.(params)

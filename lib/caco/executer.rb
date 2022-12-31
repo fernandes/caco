@@ -15,7 +15,7 @@ module Caco
     step :execute!
 
     def execute!(ctx, command:, **kwargs)
-      result = execute(command)
+      result = Caco.execute(command)
       ctx[:signal] = result[:signal]
       ctx[:exit_code] = result[:exit_code]
       ctx[:output] = result[:output]

@@ -53,7 +53,7 @@ class Caco::Ssh::AuthorizedKeysAdd < Trailblazer::Operation
     id: :mark_as_changed
 
   def write_key(ctx, authorized_keys_path:, content:, **)
-    file authorized_keys_path, content: content
+    Caco.file authorized_keys_path, content: content
   end
 
   def check_user_ssh_folder(ctx, user:, user_home:, **)
