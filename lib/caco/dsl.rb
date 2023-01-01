@@ -2,14 +2,18 @@
 module Caco
   extend T::Sig
 
-  def self.execute(name, **kwargs, &block)
+  sig {
+    params(
+      name: String,
+      command: T.nilable(T.any(String, T::Array[String]))
+    ).
+    returns(Caco::Resource::Result)
+  }
+  def self.execute(name, command: nil)
     resource = Caco::Resource::Execute.new(name)
-    kwargs.each_pair do |k, v|
-      resource.send("#{k}=", v)
-    end
-    # resource.instance_eval(&block)
-    resource.action!
-    resource.result
+    resource.command = command
+    validate_resource(resource, "execute")
+    perform_resource(resource)
   end
 
   sig {
@@ -17,18 +21,13 @@ module Caco
       name: String,
       content: String
     ).
-    returns(T::Hash[String, String])
+    returns(Caco::Resource::Result)
   }
   def self.file(name, content:)
     resource = Caco::Resource::File.new(name)
     resource.content = content
-    unless resource.valid?
-      raise Caco::Resource::Invalid.new(
-        "Invalid `file' with errors: #{resource.errors.full_messages}"
-      )
-    end
-    resource.action!
-    resource.result
+    validate_resource(resource, "file")
+    perform_resource(resource)
   end
 
   sig {
@@ -38,18 +37,39 @@ module Caco
       source: T.nilable(Symbol),
       provider: T.nilable(Symbol)
     ).
-    returns(T::Hash[String, String])
+    returns(Caco::Resource::Result)
   }
   def self.package(name, guard: :present, source: nil, provider: nil)
     resource = Caco::Resource::Package.new(name)
     resource.guard = guard
     resource.source = source
     resource.provider = provider
+    validate_resource(resource, "package")
+    perform_resource(resource)
+  end
+
+  private
+  sig {
+    params(
+      resource: Caco::Resource::Base,
+      name: String
+    ).void
+  }
+  def self.validate_resource(resource, name)
     unless resource.valid?
       raise Caco::Resource::Invalid.new(
-        "Invalid `package' with errors: #{resource.errors.full_messages}"
+        "Invalid `#{name}' with errors: #{resource.errors.full_messages}"
       )
     end
+  end
+
+  sig {
+    params(
+      resource: Caco::Resource::Base
+    ).
+    returns(Caco::Resource::Result)
+  }
+  def self.perform_resource(resource)
     resource.action!
     resource.result
   end

@@ -9,7 +9,7 @@ class Caco::ExecuterTest < Minitest::Test
   end
 
   def test_real_output
-    result = described_class.(command: ["echo", "-n", "boom"])
+    result = described_class.(command: "echo -n boom")
     assert result.success?
     assert_equal "boom", result[:output]
   end

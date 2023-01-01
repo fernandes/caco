@@ -3,8 +3,8 @@ require "test_helper"
 class Caco::Resource::ExecuteTest < Minitest::Test
   def test_real_success
     result = Caco.execute "echo 'hello world'"
-    assert_equal 0, result[:exit_code]
-    assert_equal "hello world\n", result[:output]
+    assert_equal 0, result.exit_code
+    assert_equal "hello world\n", result.output
   end
 
   def test_real_output
@@ -12,12 +12,12 @@ class Caco::Resource::ExecuteTest < Minitest::Test
       execute "echo '-n boom'",
         command: ["echo", "-n", "boom"]
     end
-    assert_equal "boom", result[:output]
+    assert_equal "boom", result.output
   end
 
   def test_real_exit_code
     result = Caco.execute "echo; exit 7"
-    assert_equal 7, result[:exit_code]
+    assert_equal 7, result.exit_code
   end
  
   # This test is like a remined if I need to run a sequence of commandss
@@ -29,9 +29,9 @@ class Caco::Resource::ExecuteTest < Minitest::Test
     ]
 
     executer_stub(returns) do
-      assert_equal [true, 0, "out 1", nil], Caco.execute("command_1")[:signal]
-      assert_equal [false, 1, "out 2", "stderror"], Caco.execute("command_2")[:signal]
-      assert_equal [true, 0, "out 3", nil], Caco.execute("command_3")[:signal]
+      assert_equal [true, 0, "out 1", nil], Caco.execute("command_1").signal
+      assert_equal [false, 1, "out 2", "stderror"], Caco.execute("command_2").signal
+      assert_equal [true, 0, "out 3", nil], Caco.execute("command_3").signal
     end
   end
 

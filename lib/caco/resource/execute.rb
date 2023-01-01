@@ -32,13 +32,13 @@ module Caco::Resource
       @stderr = error
     end
 
-    def result
-      super.merge(
+    def resource_attributes
+      {
         signal: @signal,
         exit_code: @exit_code,
         output: @output,
         stderr: @stderr
-      )
+      }
     end
 
     module ClassMethods

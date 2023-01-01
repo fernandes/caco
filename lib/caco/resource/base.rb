@@ -1,12 +1,3 @@
-def make_dsl(name, klass)
-  define_method(name) do |name, &block|
-    resource = klass.new(name)
-    resource.instance_eval(&block)
-    resource.action!
-    resource.result
-  end
-end
-
 module Caco::Resource
   class Base
     include ActiveModel::Validations
@@ -62,12 +53,20 @@ module Caco::Resource
       @changed = true
     end
 
-    def result
+    def default_attributes
       {
         resource: self,
         created: @created,
         changed: @changed
       }
+    end
+
+    def resource_attributes
+      {}
+    end
+
+    def result
+      Caco::Resource::Result.new(default_attributes.merge(resource_attributes))
     end
   end
 end
