@@ -48,6 +48,21 @@ module Caco
     perform_resource(resource)
   end
 
+  sig {
+    params(
+      name: String,
+      guard: Symbol,
+    ).
+    returns(Caco::Resource::Result)
+  }
+  def self.service(name, guard: :present)
+    resource = Caco::Resource::Service.new(name)
+    resource.guard = guard
+    validate_resource(resource, "service")
+    perform_resource(resource)
+  end
+
+
   private
   sig {
     params(
