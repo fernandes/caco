@@ -6,12 +6,13 @@ class Caco::Resource::File < Caco::Resource::Base
   sig {returns(String)}
   attr_accessor :content
 
-  sig { void }
+  sig { override.void }
   def make_absent
-    ::File.delete(path)
+    ::File.delete(path) if File.exist?(path)
+    FileUtils.remove_dir(path) if File.directory?(path)
   end
 
-  sig { void }
+  sig { override.void }
   def make_present
     dirname = File.dirname(path)
     file_exist = File.exist?(path)

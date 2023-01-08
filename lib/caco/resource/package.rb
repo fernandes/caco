@@ -9,11 +9,11 @@ class Caco::Resource::Package < Caco::Resource::Base
   sig {returns(T.nilable(Symbol))}
   attr_accessor :provider
 
-  sig { void }
+  sig { override.void }
   def make_absent
   end
 
-  sig { void }
+  sig { override.void }
   def make_present
     uninstall_package if guard == :absent
     install_package if guard == :present

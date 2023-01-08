@@ -3,11 +3,11 @@ class Caco::Resource::Service < Caco::Resource::Base
   sig {returns(Symbol)}
   attr_accessor :guard
 
-  sig { void }
+  sig { override.void }
   def make_absent
   end
 
-  sig { void }
+  sig { override.void }
   def make_present
     disable_service if guard == :absent
     enable_service if guard == :present

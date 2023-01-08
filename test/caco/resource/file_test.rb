@@ -8,10 +8,21 @@ class Caco::Resource::FileTest < Minitest::Test
     FileUtils.mkdir_p(FILE_WRITER_PATH)
   end
 
+  def test_guard_absent
+    result = Caco.file "/file_writer/file",
+      content: output_data
+
+    assert_equal File.read("#{TMP_PATH}/file_writer/file"), output_data
+
+    result = Caco.file "/file_writer/file",
+      content: output_data,
+      guard: :absent
+  end
+
   def test_write_new_file
     result = Caco.file "/file_writer/file",
       content: output_data
-  
+
     assert result.created?
     assert result.changed?
     assert_equal File.read("#{TMP_PATH}/file_writer/file"), output_data
@@ -67,6 +78,3 @@ class Caco::Resource::FileTest < Minitest::Test
   end
 end
 
-
- 
-  

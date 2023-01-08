@@ -19,13 +19,15 @@ module Caco
   sig {
     params(
       name: String,
-      content: String
+      content: String,
+      guard: Symbol
     ).
     returns(Caco::Resource::Result)
   }
-  def self.file(name, content:)
+  def self.file(name, content:, guard: :present)
     resource = Caco::Resource::File.new(name)
     resource.content = content
+    resource.guard = guard
     validate_resource(resource, "file")
     perform_resource(resource)
   end

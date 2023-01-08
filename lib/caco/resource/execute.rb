@@ -1,7 +1,9 @@
-# typed: false
+# typed: true
 require "caco/resource/base"
 module Caco::Resource
   class Execute < Caco::Resource::Base
+    extend T::Sig
+
     class Output < T::Struct
       prop :success, T::Boolean
       prop :exit_status, Integer
@@ -14,10 +16,12 @@ module Caco::Resource
     end
 
     attr_accessor :command
-    
+
+    sig { override.void }
     def make_absent
     end
 
+    sig { override.void }
     def make_present
       command_to_execute = command.present? ? command : name
       output = self.class.send(:execute, command_to_execute)
