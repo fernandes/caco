@@ -17,25 +17,25 @@ class Caco::Resource::Service < Caco::Resource::Base
   def enable_service
     return true if service_enabled?
 
-    os.enable_service(name)
+    resolved_provider.enable_service(name)
   end
 
   def disable_service
     return true unless service_enabled?
 
-    os.disable_service(name)
+    resolved_provider.disable_service(name)
   end
 
   def service_enabled?
-    os.service_enabled?(name)
+    resolved_provider.service_enabled?(name)
   end
 
-  def os
-    @os ||= case Caco::Facter.("os", "name")
+  def resolved_provider
+    @resolved_provider ||= case Caco::Facter.("os", "name")
     when "Darwin"
-      Caco::OS::Macos
+      LaunchdProvider
     when "Debian"
-      Caco::OS::Debian
+      SystemdProvider
     end
   end
 end
