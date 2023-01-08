@@ -23,26 +23,26 @@ class Caco::Resource::Package < Caco::Resource::Base
   def install_package
     return true if package_installed?
 
-    os.install_package(name)
+    internal_provider.install_package(name)
   end
 
   def uninstall_package
     return true unless package_installed?
 
-    os.uninstall_package(name)
+    internal_provider.uninstall_package(name)
   end
 
 
   def package_installed?
-    os.package_installed?(name)
+    internal_provider.package_installed?(name)
   end
 
-  def os
-    @os ||= case Caco::Facter.("os", "name")
+  def internal_provider
+    @internal_provider ||= case Caco::Facter.("os", "name")
     when "Darwin"
-      Caco::OS::Macos
+      BrewProvider
     when "Debian"
-      Caco::OS::Debian
+      AptProvider
     end
   end
 end

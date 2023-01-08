@@ -3,7 +3,7 @@ module Caco::Postgres
     ProcessSingleValue = Class.new(Trailblazer::Activity::Signal)
     ProcessMultipleValue = Class.new(Trailblazer::Activity::Signal)
 
-    step Caco::Postgres::BuildAugeas()
+    step Caco::Postgres::BuildAugeas
 
     step :define_what_process,
       Output(ProcessSingleValue, :single_value) => Id(:process_single_value),

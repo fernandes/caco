@@ -3,4 +3,3 @@ module Caco
   end
 end
 
-require 'caco/grafana/install'

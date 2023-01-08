@@ -1,3 +1,21 @@
+require "zeitwerk"
+require "zeitwerk/gem_inflector"
+class CacoZeitwerkInflector < Zeitwerk::GemInflector
+  def camelize(basename, abspath)
+    if basename == "os"
+      "OS"
+    else
+      super
+    end
+  end
+end
+
+loader = Zeitwerk::Loader.for_gem
+loader.inflector = CacoZeitwerkInflector.new(__FILE__)
+loader.setup # ready!
+
+# loader.inflector.inflect "os" => "OS"
+
 def require_path(path)
   Dir["#{path}/*.rb"].each {|file| require file }
 end
@@ -36,39 +54,12 @@ require 'marcel'
 require 'trailblazer'
 require 'trailblazer/cells'
 
-# System (order dependant)
-require "caco/config"
-require "caco/macro"
-require "caco/os"
-require "caco/executer"
-require "caco/resource"
-
-require "caco/facter"
-require "caco/file_reader"
-require "caco/file_link"
-require "caco/downloader"
-require "caco/finder"
-require "caco/unpacker"
+require "caco/configuration"
 require "caco/settings_loader"
-require "caco/version"
-
-# modules
-require "caco/debian"
-
-require "caco/barman"
-require "caco/grafana"
-require "caco/haproxy"
-require "caco/postgres"
-require "caco/prometheus"
-require "caco/rbenv"
-require "caco/repmgr"
-require "caco/ssh"
-require "caco/sudo"
-require "caco/timescale"
-
-require "caco/dsl"
 
 module Caco
+  extend Dsl
+
   class << self
     attr_accessor :root
   end
@@ -121,4 +112,4 @@ def trbreaks(klass = nil)
   true
 end
 
-
+loader.eager_load

@@ -15,6 +15,7 @@ PATH
       sorbet-static-and-runtime
       trailblazer (~> 2.1)
       trailblazer-cells
+      zeitwerk
 
 GEM
   remote: https://rubygems.org/

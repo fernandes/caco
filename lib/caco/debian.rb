@@ -1,18 +1,3 @@
-require 'caco/debian/apt_repo_add'
-require 'caco/debian/apt_key_install'
-require 'caco/debian/apt_sources_list'
-require 'caco/debian/apt_update'
-require 'caco/debian/package_installed'
-require 'caco/debian/package_install'
-require 'caco/debian/service_enable'
-require 'caco/debian/service_install'
-require 'caco/debian/user_home'
-require 'caco/debian/add_user'
-
-# Templates
-require 'caco/debian/cell/service'
-require 'caco/debian/cell/sources_list'
-
 module Caco
   module Debian
     @@apt_updated = false
