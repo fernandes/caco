@@ -20,9 +20,9 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    activemodel (7.0.4)
-      activesupport (= 7.0.4)
-    activesupport (7.0.4)
+    activemodel (7.0.4.3)
+      activesupport (= 7.0.4.3)
+    activesupport (7.0.4.3)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
@@ -42,7 +42,7 @@ GEM
       cells (~> 4.0)
       erbse (>= 0.1.1)
     coderay (1.1.3)
-    concurrent-ruby (1.1.10)
+    concurrent-ruby (1.2.2)
     config (4.1.0)
       deep_merge (~> 1.2, >= 1.2.1)
       dry-validation (~> 1.0, >= 1.0.0)
@@ -190,15 +190,6 @@ GEM
     sorbet (0.5.10598)
       sorbet-static (= 0.5.10598)
     sorbet-runtime (0.5.10598)
-    sorbet-static (0.5.10598-universal-darwin-14)
-    sorbet-static (0.5.10598-universal-darwin-15)
-    sorbet-static (0.5.10598-universal-darwin-16)
-    sorbet-static (0.5.10598-universal-darwin-17)
-    sorbet-static (0.5.10598-universal-darwin-18)
-    sorbet-static (0.5.10598-universal-darwin-19)
-    sorbet-static (0.5.10598-universal-darwin-20)
-    sorbet-static (0.5.10598-universal-darwin-21)
-    sorbet-static (0.5.10598-universal-darwin-22)
     sorbet-static (0.5.10598-x86_64-linux)
     sorbet-static-and-runtime (0.5.10598)
       sorbet (= 0.5.10598)
@@ -247,7 +238,7 @@ GEM
       trailblazer-activity-dsl-linear (>= 1.1.0, < 1.2.0)
       trailblazer-developer (>= 0.0.26)
     trailblazer-option (0.1.2)
-    tzinfo (2.0.5)
+    tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     uber (0.1.0)
     unf (0.1.4)
@@ -269,7 +260,7 @@ GEM
     zeitwerk (2.6.6)
 
 PLATFORMS
-  ruby
+  x86_64-linux
 
 DEPENDENCIES
   bundler (~> 2.0)
