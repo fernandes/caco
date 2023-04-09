@@ -21,7 +21,13 @@ class Config::Sources::YAMLSource
   def decrypt_content(content)
     parsed_content = Caco.config.eyaml_parser.parse(content)
     parsed_content.each do |parsed|
-      content.sub!(parsed.match, parsed.to_plain_text)
+      unless parsed.is_a?(Hiera::Backend::Eyaml::Parser::NonMatchToken)
+        # parsed.match.gsub!(/^>\n  /, '')
+        plain_text = parsed.to_plain_text.gsub(/\n/, "\n#{parsed.indentation}")
+
+        plain_text = "|\n#{parsed.indentation}#{plain_text}" if parsed.match.match?(/^>\n/)
+        content.sub!(parsed.match, plain_text)
+      end
     end
     content
   end
@@ -80,7 +86,7 @@ module Caco
         data_path.join("os", "#{facts[:facter_os_name]}", "#{facts[:facter_distro_codename]}.yaml"),
         # maybe add some organizations here?
         # maybe add some roles here?
-        data_path.join("nodes", "#{facts[:facter_fqdn]}"),
+        data_path.join("nodes", "#{facts[:facter_fqdn]}.yaml"),
       )
       Settings.reload!
     end
