@@ -22,14 +22,20 @@ module Caco
       params(
         name: String,
         content: String,
+        owner: T.nilable(String),
+        group: T.nilable(String),
+        mode: T.nilable(Integer),
         guard: Symbol
       ).
       returns(Caco::Resource::Result)
     }
-    def file(name, content:, guard: :present)
+    def file(name, content:, owner: nil, group: nil, mode: nil, guard: :present)
       resource = Caco::Resource::File.new(name)
       resource.content = content
       resource.guard = guard
+      resource.owner = owner
+      resource.group = group
+      resource.mode = mode
       validate_resource(resource, "file")
       perform_resource(resource)
     end
