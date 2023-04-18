@@ -7,13 +7,17 @@ module Caco
     sig {
       params(
         name: String,
+        user: T.nilable(String),
+        cwd: T.nilable(String),
         command: T.nilable(T.any(String, T::Array[String]))
       ).
       returns(Caco::Resource::Result)
     }
-    def execute(name, command: nil)
+    def execute(name, user: nil, cwd: nil, command: nil)
       resource = Caco::Resource::Execute.new(name)
       resource.command = command
+      resource.user = user
+      resource.cwd = cwd
       validate_resource(resource, "execute")
       perform_resource(resource)
     end
@@ -21,7 +25,7 @@ module Caco
     sig {
       params(
         name: String,
-        content: String,
+        content: T.nilable(String),
         owner: T.nilable(String),
         group: T.nilable(String),
         mode: T.nilable(Integer),
@@ -29,7 +33,7 @@ module Caco
       ).
       returns(Caco::Resource::Result)
     }
-    def file(name, content:, owner: nil, group: nil, mode: nil, guard: :present)
+    def file(name, content: nil, owner: nil, group: nil, mode: nil, guard: :present)
       resource = Caco::Resource::File.new(name)
       resource.content = content
       resource.guard = guard
