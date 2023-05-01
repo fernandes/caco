@@ -78,7 +78,8 @@ module Cell
         template_class: ::Tilt::ERBTemplate,
         escape_html:    false,
         escape_attrs:   false,
-        suffix:         "erb"
+        suffix:         "erb",
+        trim: true
       }
     end
   end
