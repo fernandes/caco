@@ -44,7 +44,7 @@ module Caco::Resource
 
     sig { returns(T::Boolean) }
     def success?
-      exit_code.zero?
+      exit_code.try(:zero?)
     end
 
     attribute_types.each_pair do |k, v|

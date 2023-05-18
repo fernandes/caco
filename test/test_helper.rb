@@ -50,7 +50,7 @@ class Minitest::Test
       @commander.expect :call, output, ret[1]
     end
 
-    Caco::Resource::Execute.stub :execute, ->(command){ @commander.call(command) } do
+    Caco::Resource::Execute.stub :execute, ->(command, cwd: "/tmp"){ @commander.call(command) } do
       yield
     end
 

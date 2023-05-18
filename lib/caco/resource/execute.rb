@@ -56,20 +56,28 @@ module Caco::Resource
       private
       sig {params(command: T.any(String,T::Array[String]), cwd: T.nilable(String)).returns(Caco::Resource::Execute::Output)}
       def execute(command, cwd: nil)
-        chdir = cwd.nil? ? '/root' : cwd
-        Open3.popen3(command, :chdir => chdir) do |i, o, e, t|
-          exit_status = t.value
-          Caco::Resource::Execute::Output.new(
-            success: exit_status.success?,
-            exit_status: exit_status.exitstatus,
-            stdout: o.read,
-            stderr: e.read
-          )
+        output = Caco::Resource::Execute::Output.new(success: false, exit_status: 0, stdout: "")
+        if cwd
+          Open3.popen3(*command, :chdir => cwd) do |i, o, e, t|
+            exit_status = T.cast(t.value, Process::Status)
+            output.success = T.must(exit_status.success?)
+            output.exit_status = T.must(exit_status.exitstatus)
+            output.stdout = o.read
+            output.stderr = e.read
+          end
+        else
+          Open3.popen3(*command) do |i, o, e, t|
+            exit_status = T.cast(t.value, Process::Status)
+            output.success = T.must(exit_status.success?)
+            output.exit_status = T.must(exit_status.exitstatus)
+            output.stdout = o.read
+            output.stderr = e.read
+          end
         end
+        output
       end
     end
     extend ClassMethods
   end
 end
-
 

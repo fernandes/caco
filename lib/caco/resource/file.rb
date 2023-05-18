@@ -4,7 +4,7 @@ class Caco::Resource::File < Caco::Resource::Base
   include ActiveModel::Validations
   extend T::Sig
 
-  sig { returns(String) }
+  sig { returns(T.nilable(String)) }
   attr_accessor :content
 
   sig { returns(T.nilable(String)) }
@@ -92,7 +92,10 @@ class Caco::Resource::File < Caco::Resource::Base
   def set_group(path, group)
     current_gid = File.stat(path).gid
     future_gid = begin
-      Etc.getgrnam(group)&.gid
+      # gid method does exist
+      # https://ruby-doc.org/stdlib-2.7.5/libdoc/etc/rdoc/Etc.html#group
+      # but sorbet is having a hard time with it
+      T.unsafe(Etc.getgrnam(group))&.gid
     rescue ArgumentError
       nil
     end
