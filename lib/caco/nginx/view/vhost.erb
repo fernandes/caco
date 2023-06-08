@@ -1,0 +1,4 @@
+<% if upstream %><%= cell("Caco::Nginx::Cell::Upstream", upstream) %>
+
+<% end %>
+<%= cell("Caco::Nginx::Vhost::Cell::Server", collection: servers) %>

@@ -1,0 +1,25 @@
+server {
+  listen <%= listen %>;
+  server_name <%= server_name %>;
+<% if model.return %>  return <%= model.return %>;
+<% end %>
+<% if root %>  root <%= root %>;
+<% end %>
+<% if auth_basic %>  auth_basic <%= auth_basic %>;
+<% end %>
+<% if auth_basic_user_file %>  auth_basic_user_file <%= auth_basic_user_file %>;
+<% end %>
+<% if ssl_certificate %>  ssl_certificate <%= ssl_certificate %>;
+<% end %>
+<% if ssl_certificate_key %>  ssl_certificate_key <%= ssl_certificate_key %>;
+<% end %>
+<% if ssl_session_cache %>  ssl_session_cache <%= ssl_session_cache %>;
+<% end %>
+<% if ssl_session_timeout %>  ssl_session_timeout <%= ssl_session_timeout %>;
+<% end %>
+<% if ssl_prefer_server_ciphers %>  ssl_prefer_server_ciphers <%= ssl_prefer_server_ciphers %>;
+<% end %>
+<% if ssl_protocols %>  ssl_protocols <%= ssl_protocols %>;
+<% end %>
+<%= cell("Caco::Nginx::Vhost::Server::Cell::Location", collection: locations) %>
+}

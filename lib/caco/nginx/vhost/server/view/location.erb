@@ -1,0 +1,8 @@
+  location <%= location_path %> {
+<% if proxy_http_version %>    proxy_http_version <%= proxy_http_version %>;
+<% end %>
+<% proxy_set_headers.each_pair do |k, v| %>    proxy_set_header <%= k %> <%= v %>;
+<% end %>
+<% if proxy_pass %>    proxy_pass <%= proxy_pass %>;
+<% end %>
+  }
