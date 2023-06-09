@@ -16,8 +16,6 @@ module Caco
             property :proxy_pass
             property :location
 
-            self.view_paths = [File.expand_path('./nodes')]
-
             def location_path
               location || name
             end

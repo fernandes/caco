@@ -9,8 +9,6 @@ module Caco
     class Vhost
       module Cell
         class Server < Trailblazer::Cell
-          self.view_paths = [File.expand_path('./nodes')]
-
           property :server_name
           property :listen
           property :auth_basic

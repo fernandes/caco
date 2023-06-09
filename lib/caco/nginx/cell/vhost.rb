@@ -8,8 +8,6 @@ module Caco
   module Nginx
     module Cell
       class Vhost < Trailblazer::Cell
-        self.view_paths = [File.expand_path('./nodes')]
-
         property :name
         property :upstream
         property :servers

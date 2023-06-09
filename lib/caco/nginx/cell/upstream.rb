@@ -10,8 +10,6 @@ module Caco
       class Upstream < Trailblazer::Cell
         property :name
         property :servers
-
-        self.view_paths = [File.expand_path('./nodes')]
       end
     end
   end
