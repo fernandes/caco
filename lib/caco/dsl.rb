@@ -9,15 +9,17 @@ module Caco
         name: String,
         user: T.nilable(String),
         cwd: T.nilable(String),
-        command: T.nilable(T.any(String, T::Array[String]))
+        command: T.nilable(T.any(String, T::Array[String])),
+        stream_output: T.proc.params(key: Symbol, line: String).void
       ).
       returns(Caco::Resource::Result)
     }
-    def execute(name, user: nil, cwd: nil, command: nil)
+    def execute(name, user: nil, cwd: nil, command: nil, stream_output: nil)
       resource = Caco::Resource::Execute.new(name)
       resource.command = command
       resource.user = user
       resource.cwd = cwd
+      resource.stream_output = stream_output
       validate_resource(resource, "execute")
       perform_resource(resource)
     end

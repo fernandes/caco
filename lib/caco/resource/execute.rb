@@ -18,6 +18,7 @@ module Caco::Resource
     attr_accessor :command
     attr_accessor :user
     attr_accessor :cwd
+    attr_accessor :stream_output
 
     sig { override.void }
     def make_absent
@@ -29,7 +30,7 @@ module Caco::Resource
       if user
         command_to_execute = "runuser -u #{user} -- #{command_to_execute}"
       end
-      output = self.class.send(:execute, command_to_execute, cwd: cwd)
+      output = self.class.send(:execute, command_to_execute, cwd: cwd, stream_output: stream_output)
       s = output.success?
       e = output.exit_status
       o = output.stdout
@@ -54,27 +55,42 @@ module Caco::Resource
       extend T::Sig
 
       private
-      sig {params(command: T.any(String,T::Array[String]), cwd: T.nilable(String)).returns(Caco::Resource::Execute::Output)}
-      def execute(command, cwd: nil)
+      sig {
+        params(
+          command: T.any(String,T::Array[String]),
+          cwd: T.nilable(String),
+          stream_output: T.nilable(T.proc.params(key: Symbol, line: String).void)
+        )
+        .returns(Caco::Resource::Execute::Output)
+      }
+      def execute(command, cwd: nil, stream_output: nil)
         output = Caco::Resource::Execute::Output.new(success: false, exit_status: 0, stdout: "")
-        if cwd
-          Open3.popen3(*command, :chdir => cwd) do |i, o, e, t|
-            exit_status = T.cast(t.value, Process::Status)
-            output.success = T.must(exit_status.success?)
-            output.exit_status = T.must(exit_status.exitstatus)
-            output.stdout = o.read
-            output.stderr = e.read
+        params = {}
+        params.merge!(chdir: cwd) if cwd
+        Open3.popen3(*command, **params) do |i, o, e, t|
+          if stream_output
+            { stdout: o, stderr: e }.each do |key, stream|
+              Thread.new do
+                until (line = stream.gets).nil? do
+                  stream_output.call(key, line)
+                end
+              end
+            end
+
+            t.join # don't exit until the external process is done
           end
-        else
-          Open3.popen3(*command) do |i, o, e, t|
-            exit_status = T.cast(t.value, Process::Status)
-            output.success = T.must(exit_status.success?)
-            output.exit_status = T.must(exit_status.exitstatus)
-            output.stdout = o.read
-            output.stderr = e.read
-          end
+
+          process_command(output, i, o, e, t)
         end
         output
+      end
+
+      def process_command(output, i, o, e, t)
+        exit_status = T.cast(t.value, Process::Status)
+        output.success = T.must(exit_status.success?)
+        output.exit_status = T.must(exit_status.exitstatus)
+        output.stdout = o.read
+        output.stderr = e.read
       end
     end
     extend ClassMethods
