@@ -28,7 +28,7 @@ module Caco::Resource
     def make_present
       command_to_execute = command.present? ? command : name
       if user
-        command_to_execute = "runuser -u #{user} -- #{command_to_execute}"
+        command_to_execute = "runuser -l #{user} -c '#{command_to_execute}'"
       end
       output = self.class.send(:execute, command_to_execute, cwd: cwd, stream_output: stream_output)
       s = output.success?
