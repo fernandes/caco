@@ -67,6 +67,8 @@ module Caco::Resource
         output = Caco::Resource::Execute::Output.new(success: false, exit_status: 0, stdout: "")
         params = {}
         params.merge!(chdir: cwd) if cwd
+
+        ::File.write('/var/log/caco.log', "Running command on #{cwd}: \n #{command}", mode: 'a')
         Open3.popen3(*command, **params) do |i, o, e, t|
           if stream_output
             { stdout: o, stderr: e }.each do |key, stream|
@@ -82,6 +84,9 @@ module Caco::Resource
 
           process_command(output, i, o, e, t)
         end
+
+        ::File.write('/var/log/caco.log', "[out] #{output.stdout}", mode: 'a')
+        ::File.write('/var/log/caco.log', "[err] #{output.stdout}", mode: 'a')
         output
       end
 
