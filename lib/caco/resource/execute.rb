@@ -73,8 +73,11 @@ module Caco::Resource
           if stream_output
             { stdout: o, stderr: e }.each do |key, stream|
               Thread.new do
-                until (line = stream.gets).nil? do
-                  stream_output.call(key, line)
+                begin
+                  until (line = stream.gets).nil? do
+                    stream_output.call(key, line)
+                  end
+                rescue IOError
                 end
               end
             end
