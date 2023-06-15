@@ -10,7 +10,7 @@ module Caco
         user: T.nilable(String),
         cwd: T.nilable(String),
         command: T.nilable(T.any(String, T::Array[String])),
-        stream_output: T.proc.params(key: Symbol, line: String).void
+        stream_output: T.nilable(T.proc.params(key: Symbol, line: String).void)
       ).
       returns(Caco::Resource::Result)
     }
