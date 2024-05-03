@@ -51,6 +51,15 @@ module Caco
         sig { returns(T.nilable(String)) }
         attr_accessor :ssl_protocols
 
+        sig { returns(T.nilable(String)) }
+        attr_accessor :proxy_busy_buffers_size
+
+        sig { returns(T.nilable(String)) }
+        attr_accessor :proxy_buffers
+
+        sig { returns(T.nilable(String)) }
+        attr_accessor :proxy_buffer_size
+
         sig { params(server_name: String, listen: T.any(String, Integer)).void }
         def initialize(server_name:, listen: 443)
           @server_name = server_name

@@ -21,5 +21,11 @@ server {
 <% end %>
 <% if ssl_protocols %>  ssl_protocols <%= ssl_protocols %>;
 <% end %>
+<% if proxy_busy_buffers_size %>  proxy_busy_buffers_size <%= proxy_busy_buffers_size %>;
+<% end %>
+<% if proxy_buffers %>  proxy_buffers <%= proxy_buffers %>;
+<% end %>
+<% if proxy_buffer_size %>  proxy_buffer_size <%= proxy_buffer_size %>;
+<% end %>
 <%= cell("Caco::Nginx::Vhost::Server::Cell::Location", collection: locations) %>
 }
