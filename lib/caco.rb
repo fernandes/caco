@@ -34,6 +34,12 @@ require "augeas"
 require "cells-erb"
 require "config"
 require "declarative"
+require "tty-prompt"
+require "diffy"
+require "king_konf"
+
+Diffy::Diff.default_format = :color
+
 # Monkey Patching to remove !Warning!
 Declarative::Defaults.class_eval do
   alias_method :handle_array_and_deprecate_orig, :handle_array_and_deprecate
@@ -57,6 +63,9 @@ require "trailblazer"
 require "trailblazer/cells"
 
 require "caco/configuration"
+Caco.config = Caco::Configuration.new
+Caco.config.validate!
+
 require "caco/settings_loader"
 
 module Caco

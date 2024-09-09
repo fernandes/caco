@@ -81,6 +81,26 @@ Caco::Facter.("prefix", "name")
 # => 'Hostname'
 ```
 
+## Configuration
+
+Caco configuration can be set using environment variables, all variables should have the prefix `CACO_`, eg. to change the `LOG_FILE` value, use `CACO_LOG_FILE=/path/to/caco.log`
+
+See a better description to each config option after the list
+
+- `INTERACTIVE_WRITES` : Ask what action should take when changing an existing file
+- `LOG_FILE` : Path to log file
+
+### INTERACTIVE_WRITES
+
+This is useful to understand how Caco is executing, on the images we have an example when file is being changed. The second one if after is confirmed to change the file
+
+![Caco Interactive Writes Asking for Operation](./docs/images/interactive_write_ask.jpg)
+![Caco Interactive Writes After Confirmation](./docs/images/interactive_write_ask.jpg)
+
+### LOG_FILE
+
+By default we log to `/var/log/caco.log`, but sometimes you maybe want to log to a different location, so here is the place to point to your destination
+
 ## Roadmap
 
 - [ ] Bootstrap control repo via CLI

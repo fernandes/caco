@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 # typed: true
+
 class Caco::Resource::File < Caco::Resource::Base
   include ActiveModel::Validations
   extend T::Sig
@@ -25,7 +26,7 @@ class Caco::Resource::File < Caco::Resource::Base
   sig { override.void }
   def make_present
     return make_file if guard == :present
-    return make_directory if guard == :directory
+    make_directory if guard == :directory
   end
 
   sig { returns(T::Boolean) }
@@ -42,7 +43,6 @@ class Caco::Resource::File < Caco::Resource::Base
     true
   end
 
-
   sig { returns(T::Boolean) }
   def make_file
     dirname = File.dirname(path)
@@ -51,7 +51,7 @@ class Caco::Resource::File < Caco::Resource::Base
     # Calculate MD5
     if content
       content_md5 = Digest::MD5.hexdigest(content)
-      file_md5 = (file_exist ? Digest::MD5.hexdigest(File.read(path)) : '')
+      file_md5 = (file_exist ? Digest::MD5.hexdigest(File.read(path)) : "")
     end
 
     dirname_created = false
@@ -61,9 +61,12 @@ class Caco::Resource::File < Caco::Resource::Base
         FileUtils.mkdir_p(dirname)
         dirname_created = true
       end
-      File.write(path, content) if content
-      changed!
-      created! unless file_exist
+
+      if Caco.config.interactive_writes
+        interactive_writes(path, content, file_exist)
+      else
+        non_interactive_write(path, content, file_exist)
+      end
     end
 
     if owner
@@ -74,6 +77,52 @@ class Caco::Resource::File < Caco::Resource::Base
     set_group(path, T.cast(group, String)) if group
     set_mode(path, T.cast(mode, Integer)) if mode
     true
+  end
+
+  def non_interactive_write(path, content, file_exist)
+    File.write(path, content) if content
+    changed!
+    created! unless file_exist
+
+    true
+  end
+
+  def interactive_writes(path, content, file_exist)
+    action_take = false
+
+    until action_take
+
+      result = ask_for_action
+
+      case result
+      when :yes
+        File.write(path, content) if content
+        changed!
+        created! unless file_exist
+        action_take = true
+      when :no
+        action_take = true
+      when :diff
+        content_source = File.exist?(path) ? File.read(path) : ""
+        puts Diffy::Diff.new(content_source, content)
+      when :quit
+        exit(0)
+      end
+    end
+
+    true
+  end
+
+  def ask_for_action
+    prompt = TTY::Prompt.new
+    choices = [
+      {key: "y", name: "overwrite this file", value: :yes},
+      {key: "n", name: "do not overwrite this file", value: :no},
+      # {key: "a", name: "overwrite this file and all later files", value: :all},
+      {key: "d", name: "show diff", value: :diff},
+      {key: "q", name: "quit; do not overwrite this file ", value: :quit}
+    ]
+    prompt.expand("Overwrite #{File.basename(path)}?", choices)
   end
 
   sig { params(path: String, owner: String).void }
@@ -105,7 +154,7 @@ class Caco::Resource::File < Caco::Resource::Base
 
   sig { params(path: String, mode: Integer).void }
   def set_mode(path, mode)
-    same_mode = format('%o', File.stat(path).mode)[-4..] == mode.to_s
+    same_mode = format("%o", File.stat(path).mode)[-4..] == mode.to_s
     File.chmod(mode, path) unless same_mode
   end
 

@@ -64,9 +64,7 @@ module Caco
     end
 
     def set_caco_eyaml_parser(ctx, parser:, **)
-      Caco.configure do |config|
-        config.eyaml_parser = parser
-      end
+      Caco.config.eyaml_parser = parser
     end
 
     def facter_needed_values(ctx, **)

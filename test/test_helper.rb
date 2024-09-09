@@ -6,7 +6,6 @@ end
 
 APP_PATH = File.expand_path("../", __dir__)
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
-ENV["CACO_LOG_FILE"] = "#{APP_PATH}/test/tmp/caco.log"
 require "caco"
 Caco.root = Pathname.new(APP_PATH)
 
@@ -22,11 +21,11 @@ TMP_PATH = Caco.root.join("test", "tmp").to_s
 FileUtils.rm_r(TMP_PATH, force: true) if File.exist?(TMP_PATH)
 Dir.mkdir TMP_PATH unless File.exist? TMP_PATH
 
-Caco.configure do |config|
-  config.write_files_root = Caco.root.join(TMP_PATH)
-  config.write_files = true
-end
-
+# Caco.configure do |config|
+Caco.config.write_files_root = Caco.root.join(TMP_PATH)
+Caco.config.write_files = true
+Caco.config.log_file = "#{APP_PATH}/test/tmp/caco.log"
+# end
 Dir[File.expand_path("../support/**/*.rb", __FILE__)].each { |f| require f }
 reporter_options = {color: true, slow_count: 5}
 Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new(reporter_options)]
