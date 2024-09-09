@@ -23,18 +23,11 @@ nodes/
 This is the minimum you need to start using Caco, a hello world example would be, in `nodes/<hostname>.rb` add
 
 ```ruby
-class HelloWorld < Trailblazer::Operation
-  step Subprocess(Caco::FileWriter),
-    input:  ->(_ctx, **) {{
-      path: "/root/caco.txt",
-      content: 'Hello World From Caco :)'
-    }}
-end
-
-HelloWorld.()
+Caco.file "/root/hello.txt",
+  content: "Hello World From Caco :)"
 ```
 
-Sync your control repo to your remote machine and run `./bin/caco` inside its folder, it will create the `/root/caco.txt` file with `Hello World From Caco :)` content
+Sync your control repo to your remote machine and run `./bin/caco` inside its folder, it will create the `/root/hello.txt` file with `Hello World From Caco :)` content
 
 ## Data
 
