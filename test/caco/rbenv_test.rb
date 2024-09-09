@@ -1,7 +1,6 @@
 require "test_helper"
 
 class Caco::RbenvTest < Minitest::Test
-
   def setup
     clean_tmp_path
     FileUtils.mkdir_p(TMP_PATH)
@@ -9,14 +8,14 @@ class Caco::RbenvTest < Minitest::Test
   end
 
   def teardown
-    Caco::Rbenv.root = '/opt/rbenv'
+    Caco::Rbenv.root = "/opt/rbenv"
   end
 
   class Install < Caco::RbenvTest
     # This test is like a remined if I need to run a sequence of commandss
     def test_install
       returns = stub_for_dependencies
-      returns << [[true, 0, ""], ["git clone https://github.com/rbenv/rbenv.git /home/fernandes/config/caco/test/tmp/opt/rbenv"]]
+      returns << [[true, 0, ""], ["git clone https://github.com/rbenv/rbenv.git #{TMP_PATH}/opt/rbenv"]]
 
       executer_stub(returns) do
         Caco::Rbenv.install
@@ -56,7 +55,7 @@ class Caco::RbenvTest < Minitest::Test
       ]
 
       executer_stub(returns) do
-       Caco::Rbenv.install_version("2.7.5")
+        Caco::Rbenv.install_version("2.7.5")
       end
     end
   end
@@ -79,17 +78,17 @@ class Caco::RbenvTest < Minitest::Test
       ]
 
       executer_stub(returns) do
-        assert Caco::Rbenv.global_version = '2.7.6'
+        assert Caco::Rbenv.global_version = "2.7.6"
       end
     end
 
     def test_set_global_version_idempotent
       returns = [
-        [[true, 0, "2.7.6\n"], [rbenv_command("rbenv global")]],
+        [[true, 0, "2.7.6\n"], [rbenv_command("rbenv global")]]
       ]
 
       executer_stub(returns) do
-        assert Caco::Rbenv.global_version = '2.7.6'
+        assert Caco::Rbenv.global_version = "2.7.6"
       end
     end
   end
@@ -108,7 +107,7 @@ class Caco::RbenvTest < Minitest::Test
       ]
 
       executer_stub(returns) do
-      Caco::Rbenv.rbenv_command("foo", command: "rbenv foo")
+        Caco::Rbenv.rbenv_command("foo", command: "rbenv foo")
       end
     end
   end
@@ -163,10 +162,10 @@ class Caco::RbenvTest < Minitest::Test
   end
 
   def profile_content
-  <<~CONTENT
-    export PATH="/opt/rbenv/bin:$PATH"
-    export RBENV_ROOT="/opt/rbenv"
-    eval "$(rbenv init -)"
-  CONTENT
+    <<~CONTENT
+      export PATH="/opt/rbenv/bin:$PATH"
+      export RBENV_ROOT="/opt/rbenv"
+      eval "$(rbenv init -)"
+    CONTENT
   end
 end

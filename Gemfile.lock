@@ -187,13 +187,14 @@ GEM
     ruby-augeas (0.5.0)
     ruby-progressbar (1.11.0)
     shellany (0.0.1)
-    sorbet (0.5.10598)
-      sorbet-static (= 0.5.10598)
-    sorbet-runtime (0.5.10598)
-    sorbet-static (0.5.10598-x86_64-linux)
-    sorbet-static-and-runtime (0.5.10598)
-      sorbet (= 0.5.10598)
-      sorbet-runtime (= 0.5.10598)
+    sorbet (0.5.11558)
+      sorbet-static (= 0.5.11558)
+    sorbet-runtime (0.5.11558)
+    sorbet-static (0.5.11558-universal-darwin)
+    sorbet-static (0.5.11558-x86_64-linux)
+    sorbet-static-and-runtime (0.5.11558)
+      sorbet (= 0.5.11558)
+      sorbet-runtime (= 0.5.11558)
     spoom (1.1.15)
       sorbet (>= 0.5.10187)
       sorbet-runtime (>= 0.5.9204)
@@ -261,6 +262,8 @@ GEM
 
 PLATFORMS
   ruby
+  x86_64-darwin-21
+  x86_64-darwin-23
   x86_64-linux
 
 DEPENDENCIES

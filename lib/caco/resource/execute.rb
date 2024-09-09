@@ -1,8 +1,11 @@
 # typed: true
+
 require "caco/resource/base"
 module Caco::Resource
   class Execute < Caco::Resource::Base
     extend T::Sig
+
+    LOG_FILE = ENV.fetch("CACO_LOG_FILE", "/var/log/caco.log")
 
     class Output < T::Struct
       prop :success, T::Boolean
@@ -55,30 +58,29 @@ module Caco::Resource
       extend T::Sig
 
       private
+
       sig {
         params(
-          command: T.any(String,T::Array[String]),
+          command: T.any(String, T::Array[String]),
           cwd: T.nilable(String),
           stream_output: T.nilable(T.proc.params(key: Symbol, line: String).void)
         )
-        .returns(Caco::Resource::Execute::Output)
+          .returns(Caco::Resource::Execute::Output)
       }
       def execute(command, cwd: nil, stream_output: nil)
         output = Caco::Resource::Execute::Output.new(success: false, exit_status: 0, stdout: "")
         params = {}
         params.merge!(chdir: cwd) if cwd
 
-        ::File.write('/var/log/caco.log', "Running command on #{cwd}: \n #{command}", mode: 'a')
+        ::File.write(LOG_FILE, "Running command on #{cwd}: \n #{command}", mode: "a")
         Open3.popen3(*command, **params) do |i, o, e, t|
           if stream_output
-            { stdout: o, stderr: e }.each do |key, stream|
+            {stdout: o, stderr: e}.each do |key, stream|
               Thread.new do
-                begin
-                  until (line = stream.gets).nil? do
-                    stream_output.call(key, line)
-                  end
-                rescue IOError
+                until (line = stream.gets).nil?
+                  stream_output.call(key, line)
                 end
+              rescue IOError
               end
             end
 
@@ -88,8 +90,8 @@ module Caco::Resource
           process_command(output, i, o, e, t)
         end
 
-        ::File.write('/var/log/caco.log', "[out] #{output.stdout}", mode: 'a')
-        ::File.write('/var/log/caco.log', "[err] #{output.stdout}", mode: 'a')
+        ::File.write(LOG_FILE, "[out] #{output.stdout}", mode: "a")
+        ::File.write(LOG_FILE, "[err] #{output.stdout}", mode: "a")
         output
       end
 
@@ -104,4 +106,3 @@ module Caco::Resource
     extend ClassMethods
   end
 end
-
