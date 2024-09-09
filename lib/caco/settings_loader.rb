@@ -1,6 +1,9 @@
 # This is a monkey patch to decrypt the yaml files before loading into `Config` gem
 require "config/sources/yaml_source"
 class Config::Sources::YAMLSource
+  alias_method :load_orig, :load
+  remove_method :load
+
   def load
     result = nil
 
@@ -11,11 +14,10 @@ class Config::Sources::YAMLSource
     end
 
     result || {}
-
-    rescue Psych::SyntaxError => e
-      raise "YAML syntax error occurred while parsing #{@path}. " \
-            "Please note that YAML must be consistently indented using spaces. Tabs are not allowed. " \
-            "Error: #{e.message}"
+  rescue Psych::SyntaxError => e
+    raise "YAML syntax error occurred while parsing #{@path}. " \
+          "Please note that YAML must be consistently indented using spaces. Tabs are not allowed. " \
+          "Error: #{e.message}"
   end
 
   def decrypt_content(content)
@@ -23,7 +25,7 @@ class Config::Sources::YAMLSource
     parsed_content.each do |parsed|
       unless parsed.is_a?(Hiera::Backend::Eyaml::Parser::NonMatchToken)
         # parsed.match.gsub!(/^>\n  /, '')
-        plain_text = parsed.to_plain_text.gsub(/\n/, "\n#{parsed.indentation}")
+        plain_text = parsed.to_plain_text.gsub("\n", "\n#{parsed.indentation}")
 
         plain_text = "|\n#{parsed.indentation}#{plain_text}" if parsed.match.match?(/^>\n/)
         content.sub!(parsed.match, plain_text)
@@ -44,13 +46,13 @@ module Caco
     step :custom_config
 
     def setup_validate_params(ctx, keys_path: nil, data_path: nil, **)
-      ctx[:keys_path] = !keys_path.nil? ? Pathname.new(keys_path) : Pathname.new(Caco.root.join("keys"))
-      ctx[:data_path] = !data_path.nil? ? Pathname.new(data_path) : Pathname.new(Caco.root.join("data"))
+      ctx[:keys_path] = (!keys_path.nil?) ? Pathname.new(keys_path) : Pathname.new(Caco.root.join("keys"))
+      ctx[:data_path] = (!data_path.nil?) ? Pathname.new(data_path) : Pathname.new(Caco.root.join("data"))
     end
 
     def config_setup(ctx, **)
       Config.setup do |config|
-        config.const_name = 'Settings'
+        config.const_name = "Settings"
         config.use_env = true
       end
     end
@@ -69,13 +71,13 @@ module Caco
 
     def facter_needed_values(ctx, **)
       ctx[:facts] = {}
-      ctx[:facts][:facter_kernel] =  Caco::Facter.("kernel")
-      ctx[:facts][:facter_os_name] = Caco::Facter.("os", "name")
-      ctx[:facts][:facter_distro_codename] = (ctx[:facts][:facter_kernel] == "Linux" ? Caco::Facter.("os", "distro", "codename") : nil)
-      ctx[:facts][:facter_release_full] = Caco::Facter.("os", "release", "full")
-      ctx[:facts][:facter_release_major] = Caco::Facter.("os", "release", "major")
-      ctx[:facts][:facter_release_minor] = Caco::Facter.("os", "release", "minor")
-      ctx[:facts][:facter_fqdn] = Caco::Facter.("networking", "fqdn")
+      ctx[:facts][:facter_kernel] = Caco::Facter.call("kernel")
+      ctx[:facts][:facter_os_name] = Caco::Facter.call("os", "name")
+      ctx[:facts][:facter_distro_codename] = ((ctx[:facts][:facter_kernel] == "Linux") ? Caco::Facter.call("os", "distro", "codename") : nil)
+      ctx[:facts][:facter_release_full] = Caco::Facter.call("os", "release", "full")
+      ctx[:facts][:facter_release_major] = Caco::Facter.call("os", "release", "major")
+      ctx[:facts][:facter_release_minor] = Caco::Facter.call("os", "release", "minor")
+      ctx[:facts][:facter_fqdn] = Caco::Facter.call("networking", "fqdn")
     end
 
     def config_load(ctx, facts:, data_path:, **)
@@ -86,7 +88,7 @@ module Caco
         data_path.join("os", "#{facts[:facter_os_name]}", "#{facts[:facter_distro_codename]}.yaml"),
         # maybe add some organizations here?
         # maybe add some roles here?
-        data_path.join("nodes", "#{facts[:facter_fqdn]}.yaml"),
+        data_path.join("nodes", "#{facts[:facter_fqdn]}.yaml")
       )
       Settings.reload!
     end

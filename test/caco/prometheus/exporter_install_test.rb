@@ -21,7 +21,7 @@ class Caco::Prometheus::ExporterInstallTest < Minitest::Test
       returns = [
         [[true, 0, "2"], ["tar tf /opt/prometheus/postgres_exporter_v0.7.0_linux-amd64.tar.gz 2> /dev/null|wc -l"]],
         [[true, 0, ""], ["tar xpf /opt/prometheus/postgres_exporter_v0.7.0_linux-amd64.tar.gz -C /opt/prometheus"]],
-        [[true, 0, ""], ["systemctl daemon-reload"]],
+        [[true, 0, ""], ["systemctl daemon-reload"]]
       ]
 
       args = {
@@ -31,15 +31,14 @@ class Caco::Prometheus::ExporterInstallTest < Minitest::Test
         tar_unpack_path: "#{Settings.prometheus.root}",
         current_target: "#{Settings.prometheus.root}/postgres_exporter_v#{version}_linux-amd64",
         current_link: "#{Settings.prometheus.root}/postgres_exporter-current",
-        environment_vars: [ "DATA_SOURCE_NAME=\"user=prometheus password=oftpix7iyUAx host=127.0.0.1 sslmode=disable\"" ],
+        environment_vars: ["DATA_SOURCE_NAME=\"user=prometheus password=oftpix7iyUAx host=127.0.0.1 sslmode=disable\""],
         environment_file: nil,
         service_name: "prometheus-exporter-postgres",
         service_command: "/opt/prometheus/postgres_exporter-current/postgres_exporter",
         stubbed_file: stubbed_file
       }
       executer_stub(returns) do
-        # Dev.wtf?(described_class, args)
-        result = described_class.(args)
+        result = described_class.call(**args)
         assert result.success?
       end
 

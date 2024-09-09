@@ -1,3 +1,6 @@
+Warning[:deprecated] = false
+Warning[:experimental] = false
+# Warning[:performance] = false
 APP_PATH = File.expand_path("../", __dir__)
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 ENV["CACO_LOG_FILE"] = "#{APP_PATH}/test/tmp/caco.log"
@@ -95,8 +98,8 @@ end
 Caco::SettingsLoader.call(keys_path: Caco.root.join("test", "fixtures", "keys"),
   data_path: Caco.root.join("test", "fixtures", "data"))
 
-class String
-  def constantize
-    Kernel.const_get(self)
-  end
-end
+# class String
+#   def constantize
+#     Kernel.const_get(self)
+#   end
+# end

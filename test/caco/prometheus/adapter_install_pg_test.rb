@@ -18,9 +18,9 @@ class Caco::Prometheus::AdapterInstallPgTest < Minitest::Test
     stubbed_file = fixture_file("packs/pg_prometheus-0.2.2.tar.gz")
     fakefs do
       returns = [
-        [[false, 1, ""], ['dpkg -s postgresql-server-dev-11']],
+        [[false, 1, ""], ["dpkg -s postgresql-server-dev-11"]],
         [[true, 0, ""], ["apt-get install -y postgresql-server-dev-11"]],
-        [[false, 1, ""], ['dpkg -s libpq-dev']],
+        [[false, 1, ""], ["dpkg -s libpq-dev"]],
         [[true, 0, ""], ["apt-get install -y libpq-dev"]],
         [[true, 0, "2"], ["tar tf /opt/prometheus/pg_prometheus-0.2.2.tar.gz 2> /dev/null|wc -l"]],
         [[true, 0, ""], ["tar xpf /opt/prometheus/pg_prometheus-0.2.2.tar.gz -C /opt/prometheus"]],
@@ -29,13 +29,13 @@ class Caco::Prometheus::AdapterInstallPgTest < Minitest::Test
         [[true, 0, ""], ["touch /opt/prometheus/pg_prometheus-current/.caco_built"]],
         [[false, 1, ""], ["test -f /opt/prometheus/pg_prometheus-current/.caco_installed"]],
         [[true, 0, ""], ["cd /opt/prometheus/pg_prometheus-current && make install"]],
-        [[true, 0, ""], ["touch /opt/prometheus/pg_prometheus-current/.caco_installed"]],
+        [[true, 0, ""], ["touch /opt/prometheus/pg_prometheus-current/.caco_installed"]]
       ]
-      
-      args = { version: version, postgresql_version: 11, stubbed_file: stubbed_file }
+
+      args = {version: version, postgresql_version: 11, stubbed_file: stubbed_file}
       executer_stub(returns) do
         # Dev.wtf?(described_class, args)
-        result = described_class.(args)
+        result = described_class.call(**args)
         assert result.success?
       end
 

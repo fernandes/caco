@@ -19,13 +19,13 @@ class Caco::Prometheus::InstallAlertManagerTest < Minitest::Test
       returns = [
         [[true, 0, "2"], ["tar tf /opt/prometheus/alertmanager-0.19.0.linux-amd64.tar.gz 2> /dev/null|wc -l"]],
         [[true, 0, ""], ["tar xpf /opt/prometheus/alertmanager-0.19.0.linux-amd64.tar.gz -C /opt/prometheus"]],
-        [[true, 0, ""], ["systemctl daemon-reload"]],
+        [[true, 0, ""], ["systemctl daemon-reload"]]
       ]
-      
-      args = { version: version, stubbed_file: stubbed_file }
+
+      args = {version: version, stubbed_file: stubbed_file}
       executer_stub(returns) do
         # Dev.wtf?(described_class, args)
-        result = described_class.(args)
+        result = described_class.call(**args)
         assert result.success?
       end
 

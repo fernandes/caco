@@ -6,10 +6,8 @@ class Caco::Debian::AptRepoAddTest < Minitest::Test
   end
 
   def test_add_repo
-    result = described_class.(
-      name: "pgdg", url: "http://apt.postgresql.org/pub/repos/apt/",
-      release: "stretch-pgdg", component: "main"
-    )
+    result = described_class.call(name: "pgdg", url: "http://apt.postgresql.org/pub/repos/apt/",
+      release: "stretch-pgdg", component: "main")
     assert result.success?
     assert result[:repo_created]
     assert result[:repo_changed]
@@ -25,7 +23,7 @@ class Caco::Debian::AptRepoAddTest < Minitest::Test
     }
 
     # Dev.wtf?(described_class, params)
-    result = described_class.(params)
+    result = described_class.call(**params)
     assert result.success?
     refute result[:repo_created]
     assert result[:repo_changed]

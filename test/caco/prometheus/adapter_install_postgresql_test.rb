@@ -22,7 +22,7 @@ class Caco::Prometheus::AdapterInstallPostgresqlTest < Minitest::Test
         [[true, 0, ""], ["tar xpf /opt/prometheus/prometheus-postgresql-adapter-0.6.0-linux-amd64.tar.gz -C /opt/prometheus/postgresql-adapter-0.6.0.linux-amd64"]],
         [[true, 0, ""], ["systemctl daemon-reload"]]
       ]
-      
+
       args = {
         version: version,
         database: "prometheus",
@@ -33,7 +33,7 @@ class Caco::Prometheus::AdapterInstallPostgresqlTest < Minitest::Test
       }
       executer_stub(returns) do
         # Dev.wtf?(described_class, args)
-        result = described_class.(args)
+        result = described_class.call(**args)
         assert result.success?
       end
 

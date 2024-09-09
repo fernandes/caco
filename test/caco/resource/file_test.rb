@@ -9,12 +9,12 @@ class Caco::Resource::FileTest < Minitest::Test
   end
 
   def test_guard_absent
-    result = Caco.file "/file_writer/file",
+    Caco.file "/file_writer/file",
       content: output_data
 
     assert_equal File.read("#{TMP_PATH}/file_writer/file"), output_data
 
-    result = Caco.file "/file_writer/file",
+    Caco.file "/file_writer/file",
       content: output_data,
       guard: :absent
   end
@@ -29,7 +29,7 @@ class Caco::Resource::FileTest < Minitest::Test
   end
 
   def test_do_not_change_existing_file_with_same_content
-    File.open("#{TMP_PATH}/file_writer/file", File::RDWR|File::CREAT, 0644) do |f|
+    File.open("#{TMP_PATH}/file_writer/file", File::RDWR | File::CREAT, 0o644) do |f|
       f.write(output_data)
     end
 
@@ -40,9 +40,8 @@ class Caco::Resource::FileTest < Minitest::Test
     assert_equal File.read("#{TMP_PATH}/file_writer/file"), output_data
   end
 
-
   def test_change_existing_file_with_different_content
-    File.open("#{TMP_PATH}/file_writer/file", File::RDWR|File::CREAT, 0644) do |f|
+    File.open("#{TMP_PATH}/file_writer/file", File::RDWR | File::CREAT, 0o644) do |f|
       f.write("foo")
     end
     result = Caco.file "/file_writer/file", content: output_data
@@ -68,8 +67,8 @@ class Caco::Resource::FileTest < Minitest::Test
 
   def output_data
     <<~EOF
-    Hello World
-    New Line
+      Hello World
+      New Line
     EOF
   end
 
@@ -77,4 +76,3 @@ class Caco::Resource::FileTest < Minitest::Test
     assert true
   end
 end
-

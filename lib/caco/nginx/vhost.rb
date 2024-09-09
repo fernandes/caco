@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 # typed: strict
 
-require_relative './vhost/server'
-require_relative './cell/vhost'
-
 # Caco Module
 module Caco
   extend T::Sig
@@ -22,7 +19,6 @@ module Caco
       sig { returns(T::Array[Server]) }
       attr_reader :servers
 
-
       sig { params(name: String).void }
       def initialize(name)
         @name = name
@@ -32,7 +28,6 @@ module Caco
       sig { params(upstream: Caco::Nginx::Upstream).returns(T::Boolean) }
       def upstream=(upstream)
         @upstream = T.let(upstream, T.nilable(Caco::Nginx::Upstream))
-        true
       end
 
       sig { returns(Caco::Resource::Result) }

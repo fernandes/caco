@@ -7,24 +7,24 @@ class Caco::Debian::UserHomeTest < Minitest::Test
   end
 
   def test_find_home_for_root
-    params = { user: "root" }
-    result = described_class.(params)
+    params = {user: "root"}
+    result = described_class.call(**params)
 
     assert result.success?
     assert_equal "/var/root", result[:user_home]
   end
 
   def test_find_home_for_user
-    params = { user: "user" }
-    result = described_class.(params)
+    params = {user: "user"}
+    result = described_class.call(**params)
 
     assert result.success?
     assert_equal "/home/user", result[:user_home]
   end
 
   def test_fail_for_non_existing_user
-    params = { user: "foo" }
-    result = described_class.(params)
+    params = {user: "foo"}
+    result = described_class.call(**params)
 
     assert result.failure?
     assert_nil result[:user_home]
@@ -34,8 +34,8 @@ class Caco::Debian::UserHomeTest < Minitest::Test
     clean_tmp_path
     Caco.file "/etc/passwd", content: passwd_content_bug
 
-    params = { user: "foo" }
-    result = described_class.(params)
+    params = {user: "foo"}
+    result = described_class.call(**params)
 
     assert result.success?
     assert_equal "/home/foo", result[:user_home]
@@ -43,16 +43,16 @@ class Caco::Debian::UserHomeTest < Minitest::Test
 
   def passwd_content
     <<~EOF
-    nobody:*:-2:-2:Unprivileged User:/var/empty:/usr/bin/false              
-    root:*:0:0:System Administrator:/var/root:/bin/sh
-    user:*:1000:1000:Celso Fernandes:/home/user:/bin/bash
+      nobody:*:-2:-2:Unprivileged User:/var/empty:/usr/bin/false              
+      root:*:0:0:System Administrator:/var/root:/bin/sh
+      user:*:1000:1000:Celso Fernandes:/home/user:/bin/bash
     EOF
   end
 
   def passwd_content_bug
     <<~EOF
-    systemd-coredump:x:999:999:systemd Core Dumper:/:/usr/sbin/nologin             
-    foo:x:1000:1000::/home/foo:/bin/bash
+      systemd-coredump:x:999:999:systemd Core Dumper:/:/usr/sbin/nologin             
+      foo:x:1000:1000::/home/foo:/bin/bash
     EOF
   end
 end
