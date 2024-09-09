@@ -44,5 +44,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 13.2"
   spec.add_development_dependency "tapioca"
   spec.add_development_dependency "trailblazer-developer"
+  spec.add_development_dependency "warning"
   spec.add_development_dependency "webmock"
 end

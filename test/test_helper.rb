@@ -1,6 +1,9 @@
-Warning[:deprecated] = false
-Warning[:experimental] = false
-# Warning[:performance] = false
+# Let warning enabled for application, but silence for gems
+require "warning"
+Gem.path.each do |path|
+  Warning.ignore(//, path)
+end
+
 APP_PATH = File.expand_path("../", __dir__)
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 ENV["CACO_LOG_FILE"] = "#{APP_PATH}/test/tmp/caco.log"
