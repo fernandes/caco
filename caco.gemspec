@@ -33,6 +33,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "hiera-eyaml"
   spec.add_dependency "http", "~> 5.2"
   spec.add_dependency "king_konf"
+  spec.add_dependency "facter"
   spec.add_dependency "marcel"
   spec.add_dependency "ruby-augeas"
   spec.add_dependency "sorbet-static-and-runtime"
