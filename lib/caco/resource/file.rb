@@ -122,7 +122,7 @@ class Caco::Resource::File < Caco::Resource::Base
       {key: "d", name: "show diff", value: :diff},
       {key: "q", name: "quit; do not overwrite this file ", value: :quit}
     ]
-    prompt.expand("Overwrite #{File.basename(path)}?", choices)
+    prompt.expand("Overwrite #{path}?", choices)
   end
 
   sig { params(path: String, owner: String).void }
