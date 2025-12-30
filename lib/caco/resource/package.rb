@@ -23,18 +23,17 @@ class Caco::Resource::Package < Caco::Resource::Base
   def install_package
     return true if package_installed?
 
-    resolved_provider.install_package(name)
+    resolved_provider.install_package(name, source)
   end
 
   def uninstall_package
     return true unless package_installed?
 
-    resolved_provider.uninstall_package(name)
+    resolved_provider.uninstall_package(name, source)
   end
 
-
   def package_installed?
-    resolved_provider.package_installed?(name)
+    resolved_provider.package_installed?(name, source)
   end
 
   def resolved_provider

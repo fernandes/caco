@@ -86,9 +86,9 @@ class Caco::Resource::PackageTest < Minitest::Test
     end
 
     class MacosTest < Minitest::Test
-      def test_install_package
+      def test_install_formula
         returns = [
-          [[false, 1, ""], ['brew info foo']],
+          [[false, 1, ""], ['brew list foo']],
           [[true, 0, ""], ["brew install foo"]]
         ]
 
@@ -100,9 +100,9 @@ class Caco::Resource::PackageTest < Minitest::Test
         end
       end
 
-      def test_do_not_install_existing_package
+      def test_do_not_install_existing_formula
         returns = [
-          [[true, 0, ""], ['brew info foo']],
+          [[true, 0, ""], ['brew list foo']],
         ]
 
         Caco::Facter.use_fake(fake_json_data) do
@@ -113,7 +113,34 @@ class Caco::Resource::PackageTest < Minitest::Test
         end
       end
 
+      def test_install_cask
+        returns = [
+          [[false, 1, ""], ['brew list --cask foo']],
+          [[true, 0, ""], ["brew install --cask foo"]]
+        ]
 
+        Caco::Facter.use_fake(fake_json_data) do
+          executer_stub(returns) do
+            Caco.package "foo",
+              guard: :present,
+              source: :cask
+          end
+        end
+      end
+
+      def test_do_not_install_existing_cask
+        returns = [
+          [[true, 0, ""], ['brew list --cask foo']],
+        ]
+
+        Caco::Facter.use_fake(fake_json_data) do
+          executer_stub(returns) do
+            Caco.package "foo",
+              guard: :present,
+              source: :cask
+          end
+        end
+      end
 
       def fake_json_data
         {
