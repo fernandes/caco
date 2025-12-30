@@ -88,7 +88,7 @@ class Caco::Resource::PackageTest < Minitest::Test
     class MacosTest < Minitest::Test
       def test_install_formula
         returns = [
-          [[false, 1, ""], ['brew list foo']],
+          [[false, 1, ""], ['brew list | egrep -q "^foo$"']],
           [[true, 0, ""], ["brew install foo"]]
         ]
 
@@ -102,7 +102,7 @@ class Caco::Resource::PackageTest < Minitest::Test
 
       def test_do_not_install_existing_formula
         returns = [
-          [[true, 0, ""], ['brew list foo']],
+          [[true, 0, ""], ['brew list | egrep -q "^foo$"']],
         ]
 
         Caco::Facter.use_fake(fake_json_data) do
@@ -115,7 +115,7 @@ class Caco::Resource::PackageTest < Minitest::Test
 
       def test_install_cask
         returns = [
-          [[false, 1, ""], ['brew list --cask foo']],
+          [[false, 1, ""], ['brew list --cask | egrep -q "^foo$"']],
           [[true, 0, ""], ["brew install --cask foo"]]
         ]
 
@@ -130,7 +130,7 @@ class Caco::Resource::PackageTest < Minitest::Test
 
       def test_do_not_install_existing_cask
         returns = [
-          [[true, 0, ""], ['brew list --cask foo']],
+          [[true, 0, ""], ['brew list --cask | egrep -q "^foo$"']],
         ]
 
         Caco::Facter.use_fake(fake_json_data) do

@@ -101,7 +101,10 @@ module Caco
       returns(Caco::Resource::Result)
     }
     def perform_resource(resource)
+      resource_type = resource.class.name.split("::").last
+      Caco::Logger.start(resource_type, resource.name)
       resource.action!
+      Caco::Logger.finish(changed: resource.result.changed?)
       resource.result
     end
   end

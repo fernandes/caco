@@ -68,13 +68,11 @@ module Caco::Resource
           .returns(Caco::Resource::Execute::Output)
       }
       def execute(command, cwd: nil, stream_output: nil)
-        log_file = Caco.config.log_file
-
         output = Caco::Resource::Execute::Output.new(success: false, exit_status: 0, stdout: "")
         params = {}
         params.merge!(chdir: cwd) if cwd
 
-        ::File.write(log_file, "Running command on #{cwd}: \n #{command}", mode: "a")
+        Caco::Logger.command(command.is_a?(Array) ? command.join(" ") : command)
         Open3.popen3(*command, **params) do |i, o, e, t|
           if stream_output
             {stdout: o, stderr: e}.each do |key, stream|
@@ -92,8 +90,11 @@ module Caco::Resource
           process_command(output, i, o, e, t)
         end
 
-        ::File.write(log_file, "[out] #{output.stdout}", mode: "a")
-        ::File.write(log_file, "[err] #{output.stdout}", mode: "a")
+        Caco::Logger.command_result(
+          stdout: output.stdout,
+          stderr: output.stderr,
+          exit_code: output.exit_status
+        )
         output
       end
 

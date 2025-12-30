@@ -178,6 +178,14 @@ Caco::Debian::ServiceEnable.(name: "nginx")
 Caco::Debian::AddUser.(user: "deploy")
 ```
 
+### Caco::Macos
+```ruby
+# Habilitar SSH (Remote Login)
+Caco::Macos::RemoteLogin.enable
+Caco::Macos::RemoteLogin.disable
+Caco::Macos::RemoteLogin.enabled?  # => true/false
+```
+
 ### Caco::Ssh
 ```ruby
 Caco::Ssh::AuthorizedKeysAdd.(
